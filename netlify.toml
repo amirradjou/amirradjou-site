@@ -21,3 +21,9 @@
   for = "/cv.pdf"
   [headers.values]
     Cache-Control = "public, max-age=3600, must-revalidate"
+
+# The terminal site (and older links/README) used /CV.pdf; keep that path working on the apex.
+[[redirects]]
+  from = "/CV.pdf"
+  to = "/cv.pdf"
+  status = 301
