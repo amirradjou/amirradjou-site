@@ -1,0 +1,23 @@
+# Netlify build settings for the professional site (static Astro output).
+# The site itself is created by the owner with `netlify sites:create`; nothing here creates it.
+[build]
+  command = "pnpm build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+    # No client-side JS on this site; the only <script> is non-executable JSON-LD.
+    Content-Security-Policy = "default-src 'self'; script-src 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'none'; frame-ancestors 'none'"
+
+[[headers]]
+  for = "/cv.pdf"
+  [headers.values]
+    Cache-Control = "public, max-age=3600, must-revalidate"
