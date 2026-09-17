@@ -1,0 +1,170 @@
+---
+import Base from "../layouts/Base.astro";
+import Hero from "../components/Hero.astro";
+import Section from "../components/Section.astro";
+import ExperienceEntry from "../components/ExperienceEntry.astro";
+import ProjectCard from "../components/ProjectCard.astro";
+import { loadProfile } from "../lib/profile";
+
+const profile = loadProfile();
+const year = new Date().getFullYear();
+const terminalHost = profile.links.terminal.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "");
+---
+
+<Base profile={profile}>
+  <div class="wrap">
+    <Hero profile={profile} />
+
+    <main id="main">
+      <Section id="summary" title="Summary">
+        <p class="summary">{profile.summary}</p>
+      </Section>
+
+      <Section id="experience" title="Experience">
+        {profile.experience.map((job) => (
+          <ExperienceEntry job={job} />
+        ))}
+      </Section>
+
+      <Section id="projects" title="Selected projects">
+        <div class="projects">
+          {profile.projects.map((project) => (
+            <ProjectCard project={project} />
+          ))}
+        </div>
+      </Section>
+
+      <Section id="education" title="Education">
+        <ul class="education">
+          {profile.education.map((edu) => (
+            <li class="edu">
+              <div>
+                <strong>{edu.degree}</strong>
+                <span class="muted">
+                  {" "}
+                  — {edu.school}, {edu.location}
+                </span>
+              </div>
+              <span class="dates muted">
+                {edu.start} – {edu.end}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </Section>
+
+      <Section id="skills" title="Skills">
+        <dl class="skills">
+          {Object.entries(profile.skills).map(([group, items]) => (
+            <div class="skill-row">
+              <dt>{group}</dt>
+              <dd>{items.join(", ")}</dd>
+            </div>
+          ))}
+        </dl>
+      </Section>
+    </main>
+
+    <footer class="foot muted">
+      <p class="no-print">
+        Prefer a terminal? Try{" "}
+        <a href={profile.links.terminal}>the terminal version → {terminalHost}</a>
+      </p>
+      <p>
+        CV last updated {profile.cv_date} ·{" "}
+        <a href={`mailto:${profile.links.email}`}>{profile.links.email}</a> · © {year}{" "}
+        {profile.name}
+      </p>
+    </footer>
+  </div>
+</Base>
+
+<style>
+  .summary {
+    font-size: 1.05rem;
+    max-width: 62ch;
+  }
+
+  .projects {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+    gap: 0.9rem;
+  }
+
+  .education {
+    list-style: none;
+    padding: 0;
+  }
+
+  .edu {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.25rem 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .edu + .edu {
+    margin-top: 0.6rem;
+  }
+
+  .dates {
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+    font-size: 0.92rem;
+  }
+
+  .skills {
+    display: grid;
+    gap: 0.45rem;
+  }
+
+  .skill-row {
+    display: grid;
+    grid-template-columns: 11rem 1fr;
+    gap: 0.25rem 1rem;
+    align-items: baseline;
+  }
+
+  .skill-row dt {
+    font-weight: 600;
+    font-size: 0.92rem;
+  }
+
+  .skill-row dd {
+    margin: 0;
+    font-size: 0.95rem;
+  }
+
+  @media (max-width: 30rem) {
+    .skill-row {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+
+    .skill-row + .skill-row {
+      margin-top: 0.3rem;
+    }
+  }
+
+  .foot {
+    margin-top: 3rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.9rem;
+  }
+
+  .foot p + p {
+    margin-top: 0.3rem;
+  }
+
+  @media print {
+    .projects {
+      grid-template-columns: 1fr;
+      gap: 0.6rem;
+    }
+
+    .foot {
+      margin-top: 1.2rem;
+    }
+  }
+</style>

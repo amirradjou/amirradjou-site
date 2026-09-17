@@ -1,0 +1,119 @@
+---
+import type { Profile } from "../lib/profile";
+import { currentRole } from "../lib/profile";
+
+interface Props {
+  profile: Profile;
+}
+
+const { profile } = Astro.props;
+const role = currentRole(profile);
+const pretty = (url: string) => url.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "");
+// Plain-text contact line for the printed page (the buttons are hidden in print).
+const contactLine = [
+  profile.links.email,
+  pretty(profile.links.github),
+  pretty(profile.links.linkedin),
+  pretty(profile.links.website),
+].join(" · ");
+---
+
+<header class="hero">
+  <h1>{profile.name}</h1>
+  <p class="title">{profile.title}</p>
+  <p class="meta muted">
+    {role && (
+      <span>
+        {role.role} at {role.company}
+      </span>
+    )}
+    {role && <span aria-hidden="true"> · </span>}
+    <span>{profile.location}</span>
+  </p>
+
+  <nav class="links no-print" aria-label="Contact and profiles">
+    <a class="btn" href={profile.links.github} rel="me">
+      GitHub
+    </a>
+    <a class="btn" href={profile.links.linkedin} rel="me">
+      LinkedIn
+    </a>
+    <a class="btn" href={`mailto:${profile.links.email}`}>
+      Email
+    </a>
+    <a class="btn btn-primary" href={profile.links.cv} download="Amirreza-Radjou-CV.pdf">
+      Download CV <span class="muted-inline">(PDF, {profile.cv_date})</span>
+    </a>
+  </nav>
+
+  <p class="print-only contact-line">{contactLine}</p>
+</header>
+
+<style>
+  .hero h1 {
+    font-size: clamp(1.9rem, 1.4rem + 2.2vw, 2.5rem);
+    font-weight: 750;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+  }
+
+  .title {
+    margin-top: 0.35rem;
+    font-size: 1.15rem;
+    font-weight: 500;
+    color: var(--accent);
+  }
+
+  .meta {
+    margin-top: 0.25rem;
+    font-size: 0.98rem;
+  }
+
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1.25rem;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.5rem 0.9rem;
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    background: var(--surface);
+    color: var(--text);
+    font-weight: 500;
+    text-decoration: none;
+    line-height: 1.2;
+  }
+
+  .btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--accent-contrast);
+  }
+
+  .btn-primary:hover {
+    color: var(--accent-contrast);
+    filter: brightness(1.1);
+  }
+
+  .muted-inline {
+    opacity: 0.8;
+    font-weight: 400;
+    font-size: 0.9em;
+  }
+
+  .contact-line {
+    margin-top: 0.4rem;
+    font-size: 0.92rem;
+  }
+</style>
