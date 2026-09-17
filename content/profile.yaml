@@ -1,0 +1,140 @@
+# Single source of truth for the professional site (and, later, the terminal site).
+# Every fact here must match the CV at ~/Documents/CV/2026/General-30-06-2026/main.tex.
+# Dates are written as they appear on the CV; ordering is reverse-chronological.
+
+name: Amirreza Radjou
+title: Software Engineer — Backend & Distributed Systems
+location: Toronto, ON
+cv_date: June 2026
+
+links:
+  github: https://github.com/amirradjou
+  linkedin: https://www.linkedin.com/in/amirreza-radjou/
+  email: amirreza.radjou@gmail.com
+  cv: /cv.pdf
+  website: https://amirradjou.com/
+  terminal: https://amirradjou.com/ # will move to https://terminal.amirradjou.com
+
+summary: >-
+  Software Engineer with 4+ years building backend services and distributed systems.
+  Strong in Go and Python across microservices, gRPC/REST/GraphQL APIs, service mesh,
+  and consensus/peer-to-peer protocols. Proven in regulated banking and research
+  settings, with solid testing, CI/CD, and containerized delivery; comfortable
+  full-stack with Vue.js and React.
+
+experience:
+  - company: CIBC
+    role: Senior Full Stack Developer
+    location: Toronto, ON
+    start: March 2026
+    end: Present
+    highlights:
+      - Hardened REST and gRPC endpoint security by deploying a service mesh on OpenShift
+        (mTLS, traffic policies, observability) for zero-trust communication between
+        microservices.
+      - Added gRPC APIs for inter-service communication, cutting payload overhead and
+        latency versus REST on high-throughput internal traffic.
+      - Onboarded new product models — including Simplii Financial — into the Enterprise
+        Product Catalog (EPC), the authoritative product-data source business teams depend on.
+      - Contributed to architecture and design decisions enabling shared services to serve
+        multiple customer brands.
+      - Authored and presented Interface Agreements and provided integration support to
+        partner teams.
+
+  - company: Dandelion Network
+    role: Software Engineer
+    location: Remote
+    start: May 2024
+    end: March 2025
+    highlights:
+      - Built Go and Python backend services for a mobile wallet, exposing REST, GraphQL
+        (chat, transaction history), and gRPC inter-node communication across a
+        distributed network.
+      - Led the network simulator team, building an environment to evaluate node and client
+        behaviour under adversarial conditions — malicious nodes, weak connectivity, and
+        network delays.
+      - Developed Substrate/Ink! (Rust) smart contracts for multi-signature wallets and a
+        secure Vault on Polkadot, hardened against reentrancy, with a Vue.js + TypeScript
+        frontend.
+      - Drove security testing via simulated attacks; standardized Jenkins CI/CD and Docker
+        for repeatable releases.
+
+  - company: York University
+    role: Research Assistant — Software Engineer
+    location: Toronto, ON
+    start: September 2022
+    end: May 2025
+    highlights:
+      - Extended CNSim, an open-source Java network simulator, with Bitcoin and IOTA/Tangle
+        protocols for comparative analysis of distributed consensus systems.
+      - Introduced a Transaction Finality metric and pluggable node-behaviour strategies to
+        benchmark protocols across settings and attack scenarios.
+      - Applied design patterns for extensibility, added JUnit test harnesses, and built
+        Python post-processing scripts and a visualization GUI for network behaviour.
+
+projects:
+  - name: go-orbitdb
+    kind: Open source
+    url: https://github.com/orbitdb/go-orbitdb
+    description: >-
+      Go implementation of OrbitDB (peer-to-peer database on IPFS) with key-value,
+      event-log, and document stores, replication for eventual consistency, and
+      cryptographic access control.
+    # Verified 2026-09-17 via the GitHub API: 194 of the 201 commits on orbitdb/go-orbitdb
+    # are authored by amirradjou (Nov–Dec 2024).
+    fact: Authored 194 of the 201 commits on orbitdb/go-orbitdb.
+    tags: [Go, IPFS, Peer-to-peer]
+
+  - name: CNSim
+    kind: M.Sc. thesis · York University
+    url: https://github.com/cmg-york/cnsim
+    description: >-
+      Extended CNSim, an open-source Java network simulator, with Bitcoin and IOTA/Tangle
+      protocols for comparative analysis of distributed consensus systems; introduced a
+      Transaction Finality metric and pluggable node-behaviour strategies to benchmark
+      protocols across settings and attack scenarios.
+    tags: [Java, JUnit, Python]
+
+  - name: CO₂ Emissions in Bitcoin Mining
+    kind: Academic · Sep 2023 – Apr 2024
+    url: https://andreapodhorsky.com/btcCO2emissions/
+    description: >-
+      Full-stack app (React/TypeScript, Django/Flask, PostgreSQL) visualizing Bitcoin-mining
+      CO₂ emissions as an interactive, time-ranged geospatial heatmap. Optimized in-browser
+      rendering of large datasets via chunked delivery and precomputed cumulative aggregates;
+      automated a daily multi-source ETL pipeline feeding a REST API.
+    tags: [React, TypeScript, Django, PostgreSQL]
+
+  - name: task-manager
+    kind: Side project
+    url: https://github.com/amirradjou/task-manager
+    description: >-
+      Django task manager with a web UI and a token-authenticated REST API: CRUD, search and
+      filtering, pagination, and per-user task isolation.
+    tags: [Python, Django, REST]
+
+education:
+  - degree: M.Sc. Computer Science
+    school: York University
+    location: Toronto, ON
+    start: Sep 2022
+    end: Oct 2025
+  - degree: B.Sc. Computer Science
+    school: Amirkabir University of Technology
+    location: Tehran
+    start: Oct 2018
+    end: Aug 2022
+
+skills:
+  Languages: [Go, Python, TypeScript, JavaScript, Java, Rust, SQL]
+  Backend & APIs: [gRPC, REST, GraphQL, Django, Flask]
+  Distributed Systems:
+    - Microservices
+    - Service mesh
+    - Peer-to-peer (IPFS)
+    - Consensus & blockchain protocols (Substrate/Polkadot)
+  DevOps & Platforms: [Docker, Kubernetes, OpenShift, Jenkins, GitHub Actions, CI/CD]
+  Data Stores: [PostgreSQL, ETL/ELT pipelines, Custom data loaders]
+  Frontend: [Vue.js, React, TypeScript, HTML5/CSS3]
+  Testing: [JUnit, pytest, Cypress (e2e)]
+  Security: [API security & mTLS, Threat modeling, Penetration testing, Cryptography]
