@@ -1,0 +1,19 @@
+# secrets / local config
+.env
+.env.*
+!.env.example
+.claude/settings.local.json
+
+# dependencies / build
+node_modules/
+dist/
+.astro/
+.netlify/
+
+# editors / OS
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+.DS_Store
+*.swp

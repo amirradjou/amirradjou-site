@@ -1,0 +1,30 @@
+{
+  "name": "amirradjou-site",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Professional single-page site for Amirreza Radjou, built from content/profile.yaml",
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "packageManager": "pnpm@12.4.2",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "dependencies": {
+    "astro": "^7.3.2",
+    "yaml": "^2.9.1"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "@types/node": "^22.20.3",
+    "prettier": "^3.9.7",
+    "prettier-plugin-astro": "^1.0.0",
+    "typescript": "^5.9.3"
+  }
+}
