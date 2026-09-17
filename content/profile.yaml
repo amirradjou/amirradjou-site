@@ -1,5 +1,5 @@
 # Single source of truth for the professional site (and, later, the terminal site).
-# Every fact here must match the CV at ~/Documents/CV/2026/General-30-06-2026/main.tex.
+# Every fact here must match the CV at ~/Projects/Personal/cv/master/main.tex (repo amirradjou/cv).
 # Dates are written as they appear on the CV; ordering is reverse-chronological.
 
 name: Amirreza Radjou

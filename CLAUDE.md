@@ -29,7 +29,7 @@ Recruiter-facing, single-page professional site for Amirreza Radjou (Astro, stat
 ## Conventions
 
 - See global preferences in `~/.claude/CLAUDE.md` (conventional commits, feature branches, etc.).
-- Every fact in `content/profile.yaml` must match the CV (`~/Documents/CV/<latest>/main.tex`). Do not invent numbers.
+- Every fact in `content/profile.yaml` must match the CV (`~/Projects/Personal/cv/master/main.tex`, repo amirradjou/cv). Do not invent numbers.
 - Keep the page free of client-side JavaScript and third-party requests (no analytics, no web fonts).
 - Print output must stay readable: check `@media print` rules when touching styles.
 
