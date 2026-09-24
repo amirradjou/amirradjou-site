@@ -18,3 +18,7 @@ dist/
 .DS_Store
 *.swp
 .netlify/
+
+# Claude Code project files: local only, never committed
+.claude/
+CLAUDE.md
