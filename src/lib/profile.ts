@@ -28,6 +28,8 @@ const ExperienceSchema = z
     location: nonEmpty,
     start: nonEmpty,
     end: nonEmpty,
+    /** Ids from skill_map, only what the highlights below say. */
+    uses: z.array(nonEmpty).min(1),
     highlights: z.array(nonEmpty).min(1),
   })
   .strict();
@@ -35,11 +37,24 @@ const ExperienceSchema = z
 const ProjectSchema = z
   .object({
     name: nonEmpty,
-    kind: nonEmpty,
+    /** Where the project lives; side projects leave it out (their section already says so). */
+    kind: nonEmpty.optional(),
     url: z.url(),
     description: nonEmpty,
     fact: nonEmpty.optional(),
     tags: z.array(nonEmpty).min(1),
+    /** Shown larger, before the side projects. */
+    featured: z.boolean().optional(),
+    /** A live page or demo, when there is one. */
+    live: z.url().optional(),
+    /** What the live link does, for example "Try the demo". */
+    live_label: nonEmpty.optional(),
+    /** Ids from skill_map: what the project is built with or about. */
+    uses: z.array(nonEmpty).min(1),
+    /** What its picture (src/data/media.json, keyed by name) shows; required when it has one. */
+    media_alt: nonEmpty.optional(),
+    /** Words to show in the picture's place, for a project with no picture. */
+    panel: nonEmpty.optional(),
   })
   .strict();
 
@@ -57,12 +72,16 @@ export const ProfileSchema = z
   .object({
     name: nonEmpty,
     title: nonEmpty,
+    tagline: nonEmpty,
     location: nonEmpty,
     cv_date: nonEmpty,
     links: LinksSchema,
     summary: nonEmpty,
     experience: z.array(ExperienceSchema).min(1),
     projects: z.array(ProjectSchema).min(1),
+    skill_map: z
+      .array(z.object({ id: z.string().regex(/^[a-z0-9-]+$/), label: nonEmpty }).strict())
+      .min(1),
     education: z.array(EducationSchema).min(1),
     skills: z.record(nonEmpty, z.array(nonEmpty).min(1)),
   })
@@ -81,6 +100,18 @@ export function loadProfile(): Profile {
       .map((issue) => `  - ${issue.path.join(".") || "(root)"}: ${issue.message}`)
       .join("\n");
     throw new Error(`content/profile.yaml is invalid:\n${issues}`);
+  }
+  // Every skill a project or job names must exist in skill_map, or its button would never light it.
+  const known = new Set(result.data.skill_map.map((s) => s.id));
+  const unknown = [...result.data.projects, ...result.data.experience].flatMap((item) =>
+    item.uses
+      .filter((id) => !known.has(id))
+      .map((id) => `${"name" in item ? item.name : item.company}: ${id}`)
+  );
+  if (unknown.length) {
+    throw new Error(
+      `content/profile.yaml uses skills missing from skill_map: ${unknown.join(", ")}`
+    );
   }
   return result.data;
 }

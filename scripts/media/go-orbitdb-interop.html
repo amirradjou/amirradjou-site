@@ -1,0 +1,69 @@
+<!doctype html>
+<!-- The real output of go-orbitdb's live interop tests (run 2026-11-25 on main), rendered as a terminal
+     for the site. make-media.mjs screenshots it to public/media/go-orbitdb-*.webp. -->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      html,
+      body {
+        margin: 0;
+        width: 1280px;
+        height: 800px;
+        background: #0c1117;
+      }
+      body {
+        box-sizing: border-box;
+        padding: 44px 52px;
+        font:
+          400 24px/1.55 "Noto Sans Mono",
+          "DejaVu Sans Mono",
+          monospace;
+        color: #c9d4e3;
+      }
+      .prompt {
+        color: #f4f7fb;
+        margin-bottom: 14px;
+      }
+      .prompt b {
+        color: #f5b731;
+        font-weight: 400;
+      }
+      .run {
+        color: #7d8ba1;
+      }
+      .pass {
+        color: #7ee2a0;
+      }
+      .note {
+        position: absolute;
+        left: 52px;
+        bottom: 40px;
+        color: #7d8ba1;
+        font-size: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="prompt"><b>go-orbitdb $</b> go test -tags interop -count=1 -v ./interop/</div>
+    <div class="run">=== RUN TestJSCreatesGoReplicates</div>
+    <div class="pass">--- PASS: TestJSCreatesGoReplicates (1.99s)</div>
+    <div class="run">=== RUN TestGoCreatesJSReplicates</div>
+    <div class="pass">--- PASS: TestGoCreatesJSReplicates (1.59s)</div>
+    <div class="run">=== RUN TestConcurrentWritesConverge</div>
+    <div class="pass">--- PASS: TestConcurrentWritesConverge (1.75s)</div>
+    <div class="run">=== RUN TestDocumentsBothWays</div>
+    <div class="pass">--- PASS: TestDocumentsBothWays (1.58s)</div>
+    <div class="run">=== RUN TestWriteAccessIsShared</div>
+    <div class="pass">--- PASS: TestWriteAccessIsShared (1.37s)</div>
+    <div class="run">=== RUN TestOrbitDBAccessControllerGrant</div>
+    <div class="pass">--- PASS: TestOrbitDBAccessControllerGrant (1.66s)</div>
+    <div class="run">=== RUN TestEncryptedDatabase</div>
+    <div class="pass">--- PASS: TestEncryptedDatabase (1.46s)</div>
+    <div class="pass">PASS</div>
+    <div class="pass">ok github.com/orbitdb/go-orbitdb/interop 11.410s</div>
+    <div class="note">
+      # a JavaScript @orbitdb/core 4 peer on Helia, replicating with Go both ways
+    </div>
+  </body>
+</html>

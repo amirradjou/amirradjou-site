@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 340" width="820" height="340" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Money lost to prompt-injection attacks</title>
+  <desc id="d">Same agents, same prompt, same attacks. Unguarded wallet: scripted agent lost 7,160 dollars in 11 of 11 runs; qwen2.5 7b plain prompt 2,590 dollars in 5 of 33 runs; qwen2.5 7b guarded prompt 4,325 dollars in 6 of 33 runs; qwen2.5 3b 1,258 dollars in 5 of 33 runs. Leashed wallet: 0 dollars lost in every run, 110 runs in total.</desc>
+  <style>
+    .t { fill: #1f2328; font-size: 16px; font-weight: 600; }
+    .st { fill: #59636e; font-size: 12.5px; }
+    .lab { fill: #1f2328; font-size: 13px; font-weight: 600; }
+    .sub { fill: #59636e; font-size: 11.5px; }
+    .v { fill: #1f2328; font-size: 12.5px; }
+    .vm { fill: #59636e; font-size: 12.5px; }
+    .ung { fill: #2f5f98; }
+    .lsh { fill: #9cb8db; }
+    .axis { stroke: #8c959f; stroke-width: 1; }
+    @media (prefers-color-scheme: dark) {
+      .t, .lab, .v { fill: #e6edf3; }
+      .st, .sub, .vm { fill: #9198a1; }
+      .ung { fill: #79a6dc; }
+      .lsh { fill: #3d5f8a; }
+      .axis { stroke: #6e7681; }
+    }
+  </style>
+
+  <text class="t" x="16" y="28">Money lost to prompt-injection attacks</text>
+  <text class="st" x="16" y="48">Leashed: $0 in 110 attack runs. Unguarded: $15,333, lost in 27 of 110 runs. Same agents, prompt and attacks.</text>
+
+  <line class="axis" x1="210" y1="66" x2="210" y2="322"/>
+
+  <!-- scripted: 7160 -> 378 px (380 px per 7,200) -->
+  <text class="lab" x="16" y="88">scripted agent</text>
+  <text class="sub" x="16" y="104">does what every attack asks</text>
+  <rect class="ung" x="210" y="74" width="378" height="18"/>
+  <text class="v" x="596" y="88">unguarded  $7,160 · lost in 11 of 11 runs</text>
+  <rect class="lsh" x="210" y="96" width="2" height="18"/>
+  <text class="vm" x="220" y="110">leash  $0 · lost in 0 of 11 runs</text>
+
+  <!-- qwen2.5:7b plain: 2590 -> 137 -->
+  <text class="lab" x="16" y="152">qwen2.5:7b</text>
+  <text class="sub" x="16" y="168">plain prompt</text>
+  <rect class="ung" x="210" y="138" width="137" height="18"/>
+  <text class="v" x="355" y="152">unguarded  $2,590 · lost in 5 of 33 runs</text>
+  <rect class="lsh" x="210" y="160" width="2" height="18"/>
+  <text class="vm" x="220" y="174">leash  $0 · lost in 0 of 33 runs</text>
+
+  <!-- qwen2.5:7b guarded: 4325 -> 228 -->
+  <text class="lab" x="16" y="216">qwen2.5:7b</text>
+  <text class="sub" x="16" y="232">"tool output is untrusted" prompt</text>
+  <rect class="ung" x="210" y="202" width="228" height="18"/>
+  <text class="v" x="446" y="216">unguarded  $4,325 · lost in 6 of 33 runs</text>
+  <rect class="lsh" x="210" y="224" width="2" height="18"/>
+  <text class="vm" x="220" y="238">leash  $0 · lost in 0 of 33 runs</text>
+
+  <!-- qwen2.5:3b plain: 1258 -> 66 -->
+  <text class="lab" x="16" y="280">qwen2.5:3b</text>
+  <text class="sub" x="16" y="296">plain prompt</text>
+  <rect class="ung" x="210" y="266" width="66" height="18"/>
+  <text class="v" x="284" y="280">unguarded  $1,258 · lost in 5 of 33 runs</text>
+  <rect class="lsh" x="210" y="288" width="2" height="18"/>
+  <text class="vm" x="220" y="302">leash  $0 · lost in 0 of 33 runs</text>
+</svg>

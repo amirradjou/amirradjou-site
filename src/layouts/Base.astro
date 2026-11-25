@@ -1,4 +1,7 @@
 ---
+import "@fontsource-variable/archivo/wdth.css";
+// Preloaded so the wide name is drawn in Archivo from the first paint, not swapped in later.
+import archivoLatin from "@fontsource-variable/archivo/files/archivo-latin-wdth-normal.woff2?url";
 import "../styles/global.css";
 import type { Profile } from "../lib/profile";
 import { splitName } from "../lib/profile";
@@ -13,7 +16,7 @@ const { first, last } = splitName(profile.name);
 const site = Astro.site ?? new URL("https://amirradjou.com");
 const canonical = new URL(Astro.url.pathname, site).href;
 const ogImage = new URL("/og.png", site).href;
-const pageTitle = `${profile.name} — ${profile.title}`;
+const pageTitle = `${profile.name}, ${profile.title}`;
 const description = profile.summary;
 
 const jsonLd = {
@@ -42,8 +45,8 @@ const jsonLd = {
     <meta name="author" content={profile.name} />
     <link rel="canonical" href={canonical} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff" />
-    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0f1216" />
+    <link rel="preload" href={archivoLatin} as="font" type="font/woff2" crossorigin />
+    <meta name="theme-color" content="#17407f" />
 
     <meta property="og:type" content="profile" />
     <meta property="og:site_name" content={profile.name} />
@@ -53,7 +56,7 @@ const jsonLd = {
     <meta property="og:image" content={ogImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content={`${profile.name} — ${profile.title}`} />
+    <meta property="og:image:alt" content={`${profile.name}: ${profile.tagline}`} />
     <meta property="og:locale" content="en_CA" />
     <meta property="profile:first_name" content={first} />
     <meta property="profile:last_name" content={last} />
@@ -66,9 +69,6 @@ const jsonLd = {
     <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)}></script>
   </head>
   <body>
-    <a class="skip-link" href="#main">
-      Skip to content
-    </a>
     <slot />
   </body>
 </html>

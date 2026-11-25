@@ -1,132 +1,224 @@
 ---
-import type { Project } from "../lib/profile";
+import type { Profile, Project } from "../lib/profile";
+import mediaJson from "../data/media.json";
 
 interface Props {
   project: Project;
+  skills: Profile["skill_map"];
 }
 
-const { project } = Astro.props;
-const isRepo = /^https:\/\/github\.com\//.test(project.url);
-const pretty = project.url.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "");
+type Media = {
+  src: string;
+  srcset?: string;
+  width: number;
+  height: number;
+  video?: string;
+  start?: number;
+};
+
+const { project, skills } = Astro.props;
+const media = (mediaJson as Record<string, Media>)[project.name];
+if (media && !project.media_alt) {
+  throw new Error(`content/profile.yaml: ${project.name} has a picture but no media_alt`);
+}
+const host = (url: string) => url.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "");
+const label = (id: string) => skills.find((s) => s.id === id)?.label ?? id;
+const sizes = "(min-width: 52rem) 34rem, 92vw";
 ---
 
-<article class="card">
-  <header class="card-head">
-    <h3>
-      <a href={project.url}>{project.name}</a>
-    </h3>
-    <p class="kind muted">{project.kind}</p>
-  </header>
+<div class="project">
+  {media && (
+    <figure class:list={["media", "no-print", { "has-video": media.video }]}>
+      {media.video ? (
+        <>
+          <video
+            data-start={media.start ?? 0}
+            poster={media.src}
+            width={media.width}
+            height={media.height}
+            muted
+            loop
+            playsinline
+            preload="none"
+            controls
+            aria-label={project.media_alt}
+          >
+            <source src={media.video} type="video/mp4" />
+          </video>
+          <button type="button" class="play" data-play hidden>
+            Play the demo
+          </button>
+        </>
+      ) : (
+        <img
+          src={media.src}
+          srcset={media.srcset}
+          sizes={media.srcset ? sizes : undefined}
+          width={media.width}
+          height={media.height}
+          loading="lazy"
+          decoding="async"
+          alt={project.media_alt}
+        />
+      )}
+    </figure>
+  )}
+  {!media && project.panel && (
+    <p class="media panel no-print" aria-hidden="true">
+      {project.panel}
+    </p>
+  )}
+  <h3>
+    <a href={project.url}>{project.name}</a>
+  </h3>
+  {project.kind && <p class="kind soft">{project.kind}</p>}
   <p class="desc">{project.description}</p>
   {project.fact && <p class="fact">{project.fact}</p>}
-  <footer class="card-foot">
-    <ul class="tags" aria-label="Technologies">
-      {project.tags.map((tag) => (
-        <li>{tag}</li>
-      ))}
-    </ul>
-    <a
-      class="repo no-print"
-      href={project.url}
-
-      aria-label={`${project.name} on ${isRepo ? "GitHub" : "the web"}`}
-    >
-      {isRepo ? "Repository" : "Live demo"} ↗
-    </a>
-    <span class="print-only url muted">{pretty}</span>
-  </footer>
-</article>
+  <p class="stack soft">{project.tags.join(", ")}</p>
+  <p class="links no-print">
+    <a href={project.url}>Code</a>
+    {project.live && <a href={project.live}>{project.live_label ?? "Open the live page"}</a>}
+  </p>
+  <p class="print-only soft">{host(project.url)}</p>
+  <p class="visually-hidden">Uses: {project.uses.map(label).join(", ")}.</p>
+</div>
 
 <style>
-  .card {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    padding: 1rem 1.1rem;
-    border: 1px solid var(--border);
-    border-radius: 0.6rem;
-    background: var(--surface);
+  .media {
+    position: relative;
+    margin-bottom: 1.3rem;
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--deeper);
+    box-shadow:
+      0 0 0 1px rgb(244 247 251 / 0.14),
+      0 28px 60px -24px rgb(0 0 0 / 0.65);
+    transition: box-shadow 0.35s ease;
   }
 
-  .card-head h3 {
-    font-size: 1.02rem;
-    font-weight: 650;
-    line-height: 1.3;
+  :global(.peer.lit) .media {
+    box-shadow:
+      0 0 0 2px var(--saffron),
+      0 28px 60px -24px rgb(0 0 0 / 0.65);
   }
 
-  .card-head a {
-    color: var(--text);
+  .media img,
+  .media video {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  /* For a project with no picture: its question, set large, in the picture's place. */
+  .panel {
+    display: grid;
+    align-content: end;
+    aspect-ratio: 16 / 10;
+    padding: clamp(1.25rem, 3vw, 2.25rem);
+    font-size: clamp(1.8rem, 1rem + 2.6vw, 2.9rem);
+    font-stretch: 125%;
+    font-weight: 760;
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    background:
+      radial-gradient(120% 90% at 100% 0%, rgb(245 183 49 / 0.16), transparent 55%), var(--deeper);
+  }
+
+  .play {
+    position: absolute;
+    right: 0.75rem;
+    bottom: 0.75rem;
+    padding: 0.4rem 0.75rem;
+    font: inherit;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--prussian-deep);
+    background: rgb(244 247 251 / 0.92);
+    border: 0;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+
+  .play:hover {
+    background: var(--saffron);
+  }
+
+  h3 {
+    font-size: 1.55rem;
+    font-stretch: 118%;
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+  }
+
+  h3 a {
     text-decoration: none;
   }
 
-  .card-head a:hover {
-    color: var(--accent);
+  h3 a:hover {
     text-decoration: underline;
+    text-decoration-thickness: 2px;
   }
 
   .kind {
-    font-size: 0.85rem;
-    margin-top: 0.1rem;
-  }
-
-  .desc {
+    margin-top: 0.2rem;
     font-size: 0.95rem;
   }
 
+  .desc {
+    margin-top: 0.7rem;
+    max-width: 60ch;
+  }
+
   .fact {
+    margin-top: 0.8rem;
+    padding-left: 0.9rem;
+    border-left: 3px solid var(--saffron);
+    font-weight: 560;
+    line-height: 1.45;
+  }
+
+  .stack {
+    margin-top: 0.85rem;
     font-size: 0.92rem;
+  }
+
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.25rem;
+    margin-top: 0.3rem;
     font-weight: 600;
-    color: var(--accent);
+    font-size: 0.97rem;
   }
 
-  .card-foot {
-    margin-top: auto;
-    padding-top: 0.25rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    gap: 0.5rem 1rem;
-    flex-wrap: wrap;
-  }
-
-  .tags {
-    list-style: none;
-    padding: 0;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.35rem;
-  }
-
-  .tags li {
-    margin: 0;
-    font-size: 0.78rem;
-    padding: 0.1rem 0.5rem;
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    color: var(--muted);
-    background: var(--bg);
-  }
-
-  .repo {
-    font-size: 0.88rem;
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
     white-space: nowrap;
   }
 
-  .url {
-    font-size: 0.85rem;
-  }
-
   @media print {
-    .card {
-      break-inside: avoid;
-      padding: 0;
-      border: none;
-      gap: 0.2rem;
+    h3 {
+      font-size: 11pt;
     }
 
-    .tags li {
-      border-color: #bbb;
-      padding: 0 0.4rem;
+    .desc,
+    .fact {
+      margin-top: 0.2rem;
+      font-size: 9.5pt;
+    }
+
+    .fact {
+      border: 0;
+      padding: 0;
+    }
+
+    .stack {
+      display: none;
     }
   }
 </style>

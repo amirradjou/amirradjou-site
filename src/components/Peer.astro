@@ -1,0 +1,151 @@
+---
+// A peer on the bus: anything wired to the cable that runs down the page. The port sits on the edge
+// that faces the bus, and the branch connects it. data-uses lists the skills it answers to.
+interface Props {
+  side: "left" | "right";
+  kind: "project" | "job";
+  uses: string[];
+  label: string;
+}
+
+const { side, kind, uses, label } = Astro.props;
+---
+
+<article
+  class:list={["peer", side]}
+  data-peer
+  data-kind={kind}
+  data-uses={uses.join(" ")}
+  data-label={label}
+>
+  <span class="branch no-print" aria-hidden="true"></span>
+  <span class="port no-print" aria-hidden="true"></span>
+  <slot />
+</article>
+
+<style>
+  .peer {
+    position: relative;
+    transition:
+      opacity 0.45s ease,
+      filter 0.45s ease;
+  }
+
+  .right {
+    margin-top: 6rem;
+  }
+
+  .branch {
+    position: absolute;
+    top: var(--port-y);
+    height: 2px;
+    width: calc(var(--gap) / 2);
+    background: var(--line);
+    transition: background 0.3s ease;
+  }
+
+  .left .branch {
+    left: 100%;
+  }
+
+  .right .branch {
+    right: 100%;
+  }
+
+  .port {
+    position: absolute;
+    top: calc(var(--port-y) - 6px);
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--deep);
+    border: 2px solid rgb(244 247 251 / 0.7);
+    z-index: 2;
+    transition:
+      background 0.3s ease,
+      border-color 0.3s ease,
+      box-shadow 0.3s ease;
+  }
+
+  .left .port {
+    right: -7px;
+  }
+
+  .right .port {
+    left: -7px;
+  }
+
+  /* A peer the message just reached: its port flashes once. */
+  :global(.peer.reached) .port {
+    animation: ping 0.7s ease-out;
+  }
+
+  /* A peer that used the skill stays lit until another skill is picked. */
+  :global(.peer.lit) .port {
+    background: var(--saffron);
+    border-color: var(--saffron);
+    box-shadow: 0 0 0 6px rgb(245 183 49 / 0.22);
+  }
+
+  :global(.peer.lit) .branch {
+    background: var(--saffron);
+  }
+
+  :global([data-skill-active] .peer.reached:not(.lit)) {
+    opacity: 0.34;
+    filter: saturate(0.3);
+  }
+
+  @keyframes ping {
+    0% {
+      box-shadow: 0 0 0 0 rgb(244 247 251 / 0.7);
+    }
+    100% {
+      box-shadow: 0 0 0 16px rgb(244 247 251 / 0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .peer,
+    .branch,
+    .port {
+      transition: none;
+    }
+
+    :global(.peer.reached) .port {
+      animation: none;
+    }
+  }
+
+  /* One column: the bus runs down the left edge and every peer hangs off it. */
+  @media (max-width: 52rem) {
+    .right {
+      margin-top: 0;
+    }
+
+    .left .branch,
+    .right .branch {
+      left: auto;
+      right: 100%;
+      width: var(--hang);
+    }
+
+    .left .port,
+    .right .port {
+      right: auto;
+      left: -7px;
+    }
+  }
+
+  @media print {
+    .peer {
+      break-inside: avoid;
+      opacity: 1 !important;
+      filter: none !important;
+    }
+
+    .right {
+      margin-top: 0;
+    }
+  }
+</style>

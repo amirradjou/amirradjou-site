@@ -1,28 +1,28 @@
-/* Design tokens — light first, dark via prefers-color-scheme, print overrides at the end. */
+/*
+ * The page is one network. The hero is a toy peer-to-peer network; below it, a cable (the bus) runs down
+ * the middle of the page, and every project and job is a peer wired to it. A visitor can send a message
+ * from a skill: it travels the bus, every peer passes it on, and the peers that used that skill light up.
+ * One family, Archivo, at different widths: wide for names, condensed for stations on the bus.
+ * Saffron only marks something live or lit. Pictures keep their original colours.
+ */
 :root {
-  color-scheme: light dark;
-  --bg: #ffffff;
-  --surface: #f5f6f8;
-  --text: #1b1f24;
-  --muted: #5b6470;
-  --accent: #1f3a5f; /* same accent as the CV */
-  --accent-contrast: #ffffff;
-  --border: #dfe3e8;
-  --focus: #2f6fdd;
-  --max-width: 46rem;
-}
+  color-scheme: dark;
+  --plate: #17407f; /* the hero */
+  --deep: #0f2d5e; /* the page below it */
+  --deeper: #0b2350;
+  --on: #f4f7fb;
+  --on-soft: #b9c9e4;
+  --line: rgb(244 247 251 / 0.24);
+  --saffron: #f5b731;
+  --prussian-deep: #0e2b5a;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #0f1216;
-    --surface: #171b21;
-    --text: #e7e9ec;
-    --muted: #9aa4b1;
-    --accent: #8fb4e3;
-    --accent-contrast: #0f1216;
-    --border: #2a3039;
-    --focus: #8fb4e3;
-  }
+  --measure: 66ch;
+  --page: 76rem;
+  --gutter: clamp(1.25rem, 4vw, 3rem);
+  --gap: clamp(5rem, 9vw, 8rem); /* between the two columns; the bus runs down its middle */
+  --port-y: 1.4rem; /* where a peer's port sits, from its top */
+
+  --font: "Archivo Variable", "Archivo", ui-sans-serif, system-ui, sans-serif;
 }
 
 *,
@@ -32,44 +32,21 @@
 }
 
 html {
-  font-size: 100%;
   -webkit-text-size-adjust: 100%;
-  scroll-behavior: smooth;
+  background: var(--deep);
 }
 
 body {
   margin: 0;
-  background: var(--bg);
-  color: var(--text);
-  font-family:
-    ui-sans-serif,
-    system-ui,
-    -apple-system,
-    "Segoe UI",
-    Roboto,
-    "Helvetica Neue",
-    Arial,
-    sans-serif;
-  font-size: 1rem;
-  line-height: 1.55;
+  background: var(--deep);
+  color: var(--on);
+  font-family: var(--font);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  font-stretch: 100%;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
-}
-
-a {
-  color: var(--accent);
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 0.15em;
-}
-
-a:hover {
-  text-decoration-thickness: 2px;
-}
-
-:focus-visible {
-  outline: 2px solid var(--focus);
-  outline-offset: 2px;
+  font-variant-numeric: tabular-nums;
 }
 
 h1,
@@ -77,71 +54,69 @@ h2,
 h3,
 p,
 ul,
-dl {
+dl,
+figure {
   margin: 0;
 }
 
-ul {
-  padding-left: 1.2rem;
+a {
+  color: inherit;
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  text-decoration-color: color-mix(in srgb, currentColor 45%, transparent);
 }
 
-li + li {
-  margin-top: 0.3rem;
+a:hover {
+  text-decoration-color: currentColor;
+  text-decoration-thickness: 2px;
 }
 
-.wrap {
-  max-width: var(--max-width);
-  margin: 0 auto;
-  padding: 2.75rem 1.25rem 3rem;
+:focus-visible {
+  outline: 3px solid var(--saffron);
+  outline-offset: 3px;
+  border-radius: 2px;
 }
 
 .skip-link {
   position: absolute;
   left: 1rem;
-  top: -3rem;
-  padding: 0.5rem 0.75rem;
-  background: var(--accent);
-  color: var(--accent-contrast);
-  border-radius: 0.375rem;
-  z-index: 10;
+  top: -4rem;
+  z-index: 50;
+  padding: 0.5rem 0.8rem;
+  background: var(--saffron);
+  color: var(--prussian-deep);
+  font-weight: 600;
 }
 
 .skip-link:focus {
   top: 1rem;
 }
 
-.section {
-  margin-top: 2.5rem;
+.page {
+  max-width: var(--page);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
 }
 
-.section > h2 {
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--accent);
-  padding-bottom: 0.4rem;
-  margin-bottom: 1rem;
-  border-bottom: 1px solid var(--border);
-}
-
-.muted {
-  color: var(--muted);
+.soft {
+  color: var(--on-soft);
 }
 
 .print-only {
   display: none;
 }
 
-/* ---- Print: black on white, no chrome, URLs where they matter ---- */
+/* ---- Print: plain ink on white; no plates, wires or pictures ---- */
 @media print {
   :root {
-    --bg: #ffffff;
-    --surface: #ffffff;
-    --text: #000000;
-    --muted: #333333;
-    --accent: #1f3a5f;
-    --border: #999999;
+    color-scheme: light; /* otherwise the browser paints the paper margins dark */
+    --deep: #fff;
+    --deeper: #fff;
+    --plate: #fff;
+    --on: #000;
+    --on-soft: #333;
+    --line: transparent;
   }
 
   @page {
@@ -149,28 +124,22 @@ li + li {
   }
 
   html {
-    font-size: 10.5pt;
+    font-size: 9.5pt;
+    background: #fff;
   }
 
   body {
+    font-size: 1rem;
+    background: #fff;
     -webkit-font-smoothing: auto;
   }
 
-  .wrap {
+  .page {
     max-width: none;
     padding: 0;
   }
 
-  .section {
-    margin-top: 1.1rem;
-  }
-
-  .section > h2 {
-    margin-bottom: 0.5rem;
-  }
-
   a {
-    color: inherit;
     text-decoration: none;
   }
 
@@ -181,8 +150,29 @@ li + li {
   .no-print {
     display: none !important;
   }
+}
 
-  li + li {
-    margin-top: 0.1rem;
-  }
+/* Wires from the skill buttons to the top of the cable (drawn by src/scripts/bus.ts). */
+main {
+  position: relative;
+}
+
+.wires {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.wires path {
+  fill: none;
+  stroke: var(--line);
+  stroke-width: 1.5;
+  transition: stroke 0.3s ease;
+}
+
+.wires path.hot {
+  stroke: var(--saffron);
+  stroke-width: 2;
 }

@@ -22,3 +22,6 @@ dist/
 # Claude Code project files: local only, never committed
 .claude/
 CLAUDE.md
+
+# downloaded README images and renders for scripts/media
+.cache/

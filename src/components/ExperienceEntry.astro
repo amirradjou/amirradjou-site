@@ -13,10 +13,10 @@ const { job } = Astro.props;
     <div>
       <h3>{job.role}</h3>
       <p class="org">
-        {job.company} <span class="muted">· {job.location}</span>
+        {job.company}, <span class="soft">{job.location}</span>
       </p>
     </div>
-    <p class="dates muted">
+    <p class="dates soft">
       <time>{job.start}</time> – <time>{job.end}</time>
     </p>
   </header>
@@ -29,7 +29,7 @@ const { job } = Astro.props;
 
 <style>
   .entry + .entry {
-    margin-top: 1.5rem;
+    margin-top: 2.25rem;
   }
 
   .entry-head {
@@ -42,23 +42,36 @@ const { job } = Astro.props;
   }
 
   h3 {
-    font-size: 1.05rem;
-    font-weight: 650;
-    line-height: 1.3;
+    font-size: 1.3rem;
+    font-stretch: 112%;
+    font-weight: 660;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
   }
 
   .org {
-    font-size: 0.98rem;
+    margin-top: 0.1rem;
+    font-size: 1rem;
   }
 
   .dates {
-    font-size: 0.92rem;
+    font-size: 0.95rem;
     white-space: nowrap;
     font-variant-numeric: tabular-nums;
   }
 
   ul {
-    font-size: 0.97rem;
+    max-width: var(--measure);
+    padding-left: 1.1rem;
+    font-size: 1rem;
+  }
+
+  li + li {
+    margin-top: 0.45rem;
+  }
+
+  li::marker {
+    color: var(--on-soft);
   }
 
   @media print {
@@ -68,6 +81,18 @@ const { job } = Astro.props;
 
     .entry + .entry {
       margin-top: 0.7rem;
+    }
+
+    h3 {
+      font-size: 11pt;
+    }
+
+    ul {
+      font-size: 9.5pt;
+    }
+
+    li + li {
+      margin-top: 0.1rem;
     }
   }
 </style>

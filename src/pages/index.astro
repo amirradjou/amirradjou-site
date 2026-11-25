@@ -1,94 +1,194 @@
 ---
 import Base from "../layouts/Base.astro";
 import Hero from "../components/Hero.astro";
-import Section from "../components/Section.astro";
-import ExperienceEntry from "../components/ExperienceEntry.astro";
+import Peer from "../components/Peer.astro";
 import ProjectCard from "../components/ProjectCard.astro";
+import ExperienceEntry from "../components/ExperienceEntry.astro";
+import Switchboard from "../components/Switchboard.astro";
 import { loadProfile } from "../lib/profile";
 
 const profile = loadProfile();
 const year = new Date().getFullYear();
 const terminalHost = profile.links.terminal.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "");
+const side = (i: number) => (i % 2 === 0 ? "left" : "right");
 ---
 
 <Base profile={profile}>
-  <div class="wrap">
-    <Hero profile={profile} />
+  <a class="skip-link" href="#main">
+    Skip to content
+  </a>
+  <Hero profile={profile} />
 
-    <main id="main">
-      <Section id="summary" title="Summary">
-        <p class="summary">{profile.summary}</p>
-      </Section>
+  <main id="main">
+    <section class="intro page" aria-labelledby="about-heading">
+      <h2 id="about-heading" class="visually-hidden">
+        About
+      </h2>
+      <p class="summary">{profile.summary}</p>
+    </section>
 
-      <Section id="experience" title="Experience">
-        {profile.experience.map((job) => (
-          <ExperienceEntry job={job} />
+    <Switchboard profile={profile} />
+
+    <div class="bus page" data-bus>
+      <span class="bus-line no-print" aria-hidden="true"></span>
+
+      <h2 class="station" id="work">
+        Projects
+      </h2>
+      <div class="peers">
+        {profile.projects.map((project, i) => (
+          <Peer side={side(i)} kind="project" uses={project.uses} label={project.name}>
+            <ProjectCard project={project} skills={profile.skill_map} />
+          </Peer>
         ))}
-      </Section>
+      </div>
 
-      <Section id="projects" title="Selected projects">
-        <div class="projects">
-          {profile.projects.map((project) => (
-            <ProjectCard project={project} />
-          ))}
-        </div>
-      </Section>
+      <h2 class="station" id="experience">
+        Jobs
+      </h2>
+      <div class="peers">
+        {profile.experience.map((job, i) => (
+          <Peer side={side(i)} kind="job" uses={job.uses} label={job.company}>
+            <ExperienceEntry job={job} />
+          </Peer>
+        ))}
+      </div>
 
-      <Section id="education" title="Education">
-        <ul class="education">
-          {profile.education.map((edu) => (
-            <li class="edu">
-              <div>
+      <h2 class="station" id="education">
+        Education and skills
+      </h2>
+      <div class="peers rest">
+        <section aria-label="Education">
+          <ul class="education">
+            {profile.education.map((edu) => (
+              <li>
                 <strong>{edu.degree}</strong>
-                <span class="muted">
-                  {" "}
-                  — {edu.school}, {edu.location}
+                <span class="soft">
+                  {edu.school}, {edu.location}
                 </span>
+                <span class="dates soft">
+                  {edu.start} to {edu.end}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </section>
+        <section aria-label="All skills">
+          <dl class="skills">
+            {Object.entries(profile.skills).map(([group, items]) => (
+              <div class="skill-row">
+                <dt>{group}</dt>
+                <dd class="soft">{items.join(", ")}</dd>
               </div>
-              <span class="dates muted">
-                {edu.start} – {edu.end}
-              </span>
-            </li>
-          ))}
-        </ul>
-      </Section>
+            ))}
+          </dl>
+        </section>
+      </div>
+      <span class="bus-end no-print" aria-hidden="true"></span>
+    </div>
+  </main>
 
-      <Section id="skills" title="Skills">
-        <dl class="skills">
-          {Object.entries(profile.skills).map(([group, items]) => (
-            <div class="skill-row">
-              <dt>{group}</dt>
-              <dd>{items.join(", ")}</dd>
-            </div>
-          ))}
-        </dl>
-      </Section>
-    </main>
-
-    <footer class="foot muted">
-      <p class="no-print">
-        Prefer a terminal? Try{" "}
-        <a href={profile.links.terminal}>the terminal version → {terminalHost}</a>
+  <footer class="band">
+    <div class="page band-inner">
+      <h2>Write to me</h2>
+      <p class="mail no-print">
+        <a href={`mailto:${profile.links.email}`}>{profile.links.email}</a>
       </p>
-      <p>
-        CV last updated {profile.cv_date} ·{" "}
-        <a href={`mailto:${profile.links.email}`}>{profile.links.email}</a> · © {year}{" "}
-        {profile.name}
+      <p class="band-links no-print">
+        <a href={profile.links.linkedin} rel="me">
+          LinkedIn
+        </a>
+        <a href={profile.links.github} rel="me">
+          GitHub
+        </a>
+        <a href={profile.links.cv} download="Amirreza-Radjou-CV.pdf">
+          CV (PDF)
+        </a>
+        <a href={profile.links.terminal}>The same site as a terminal: {terminalHost}</a>
       </p>
-    </footer>
-  </div>
+      <p class="small">{`CV last updated ${profile.cv_date}. © ${year} ${profile.name}.`}</p>
+    </div>
+  </footer>
 </Base>
 
+<script>
+  import "../scripts/bus.ts";
+</script>
+
 <style>
-  .summary {
-    font-size: 1.05rem;
-    max-width: 62ch;
+  main {
+    padding-top: clamp(4rem, 9vw, 7rem);
   }
 
-  .projects {
+  .intro {
+    margin-bottom: clamp(4rem, 8vw, 6rem);
+  }
+
+  .summary {
+    max-width: 40ch;
+    margin-inline: auto;
+    text-align: center;
+    font-size: clamp(1.35rem, 1.1rem + 0.9vw, 1.8rem);
+    font-stretch: 94%;
+    font-weight: 450;
+    line-height: 1.4;
+  }
+
+  .bus {
+    position: relative;
+    margin-top: clamp(5rem, 9vw, 7.5rem); /* room for the wires from the skill buttons */
+    padding-top: 3rem;
+  }
+
+  /* The cable: from the switchboard to the end of the page, down the middle of the gap. */
+  .bus-line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 2px;
+    margin-left: -1px;
+    background: var(--line);
+  }
+
+  .bus-end {
+    position: absolute;
+    bottom: -7px;
+    left: 50%;
+    width: 14px;
+    height: 14px;
+    margin-left: -7px;
+    border-radius: 50%;
+    background: var(--saffron);
+  }
+
+  /* A station is a section name sitting on the cable. */
+  .station {
+    position: relative;
+    z-index: 1;
+    width: fit-content;
+    margin: 0 auto 3rem;
+    padding: 0.4rem 1.1rem 0.45rem;
+    font-size: 1.35rem;
+    font-stretch: 72%;
+    font-weight: 640;
+    line-height: 1.1;
+    background: var(--deep);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+  }
+
+  .peers {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
-    gap: 0.9rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--gap);
+    row-gap: 4rem;
+    margin-bottom: clamp(5rem, 10vw, 8rem);
+  }
+
+  .rest {
+    row-gap: 2rem;
+    margin-bottom: 4rem;
   }
 
   .education {
@@ -96,75 +196,165 @@ const terminalHost = profile.links.terminal.replace(/^https?:\/\/(www\.)?/, "").
     padding: 0;
   }
 
-  .edu {
-    display: flex;
-    justify-content: space-between;
-    gap: 0.25rem 1.5rem;
-    flex-wrap: wrap;
+  .education li {
+    display: grid;
   }
 
-  .edu + .edu {
-    margin-top: 0.6rem;
+  .education li + li {
+    margin-top: 1.1rem;
   }
 
-  .dates {
-    white-space: nowrap;
-    font-variant-numeric: tabular-nums;
-    font-size: 0.92rem;
+  .education strong {
+    font-weight: 640;
+    font-stretch: 110%;
   }
 
   .skills {
     display: grid;
-    gap: 0.45rem;
-  }
-
-  .skill-row {
-    display: grid;
-    grid-template-columns: 11rem 1fr;
-    gap: 0.25rem 1rem;
-    align-items: baseline;
+    gap: 0.55rem;
   }
 
   .skill-row dt {
-    font-weight: 600;
-    font-size: 0.92rem;
+    font-weight: 620;
+    font-size: 0.95rem;
   }
 
   .skill-row dd {
     margin: 0;
-    font-size: 0.95rem;
+    font-size: 0.97rem;
   }
 
-  @media (max-width: 30rem) {
-    .skill-row {
-      grid-template-columns: 1fr;
-      gap: 0;
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  /* One column on narrow screens: the cable moves to the left edge. */
+  @media (max-width: 52rem) {
+    .bus {
+      --hang: 1.6rem;
     }
 
-    .skill-row + .skill-row {
-      margin-top: 0.3rem;
+    .bus-line,
+    .bus-end {
+      left: calc(var(--gutter) + 0.4rem);
+    }
+
+    .peers {
+      grid-template-columns: minmax(0, 1fr);
+      padding-left: calc(0.4rem + var(--hang));
+    }
+
+    .station {
+      margin-left: 0;
+    }
+
+    .summary {
+      text-align: left;
+      margin-inline: 0;
     }
   }
 
-  .foot {
-    margin-top: 3rem;
-    padding-top: 1rem;
-    border-top: 1px solid var(--border);
+  .band {
+    background: var(--plate);
+    color: var(--on);
+  }
+
+  .band-inner {
+    padding-block: clamp(3rem, 7vw, 5rem);
+  }
+
+  .band h2 {
+    font-size: clamp(2rem, 1.4rem + 2.4vw, 3.25rem);
+    font-stretch: 125%;
+    font-weight: 760;
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  .mail {
+    margin-top: 1rem;
+    font-size: clamp(1.2rem, 1rem + 0.9vw, 1.6rem);
+    font-weight: 520;
+    overflow-wrap: anywhere;
+  }
+
+  .band-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .small {
+    margin-top: 2.5rem;
     font-size: 0.9rem;
-  }
-
-  .foot p + p {
-    margin-top: 0.3rem;
+    color: var(--on-soft);
   }
 
   @media print {
-    .projects {
-      grid-template-columns: 1fr;
-      gap: 0.6rem;
+    main {
+      padding-top: 1rem;
     }
 
-    .foot {
-      margin-top: 1.2rem;
+    .intro {
+      margin-bottom: 1rem;
+    }
+
+    .summary {
+      max-width: none;
+      text-align: left;
+      font-size: 10.5pt;
+    }
+
+    .bus {
+      padding-top: 0;
+    }
+
+    .station {
+      margin: 0.7rem 0 0.3rem;
+      padding: 0;
+      border: 0;
+      font-size: 13pt;
+    }
+
+    .peers {
+      gap: 0.5rem 1.4rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .small {
+      margin-top: 0.6rem;
+    }
+
+    /* On paper each skill group takes one line. */
+    .skills {
+      gap: 0.15rem;
+    }
+
+    .skill-row {
+      display: flex;
+      gap: 0.4rem;
+    }
+
+    .skill-row dt::after {
+      content: ":";
+    }
+
+    .band {
+      background: none;
+    }
+
+    .band h2 {
+      display: none;
+    }
+
+    .band-inner {
+      padding: 0;
     }
   }
 </style>

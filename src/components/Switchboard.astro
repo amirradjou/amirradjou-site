@@ -1,0 +1,159 @@
+---
+// The skills a visitor can send a message from. Each button is wired to the top of the bus; the count
+// is how many projects and jobs list that skill, computed from content/profile.yaml.
+import type { Profile } from "../lib/profile";
+
+interface Props {
+  profile: Profile;
+}
+
+const { profile } = Astro.props;
+const count = (id: string) =>
+  [...profile.projects, ...profile.experience].filter((item) => item.uses.includes(id)).length;
+---
+
+<div class="switchboard no-print" data-switchboard hidden>
+  <h2 id="switchboard-heading">Send a message from a skill</h2>
+  <p class="hint soft">
+    It runs down the cable below, every project and job passes it on, and the ones that used that
+    skill light up.
+  </p>
+  <div class="result">
+    <p class="status" data-bus-status aria-live="polite"></p>
+    <button type="button" class="clear" data-skill-clear hidden>
+      Show everything again
+    </button>
+  </div>
+  <div class="skills" role="group" aria-labelledby="switchboard-heading">
+    {profile.skill_map.map((skill) => (
+      <button
+        type="button"
+        class="skill"
+        data-skill={skill.id}
+        data-label={skill.label}
+        aria-pressed="false"
+      >
+        <span class="node" aria-hidden="true" />
+        {skill.label}
+        <span class="count soft" aria-label={`${count(skill.id)} places`}>
+          {count(skill.id)}
+        </span>
+      </button>
+    ))}
+  </div>
+</div>
+
+<style>
+  .switchboard {
+    position: relative;
+    z-index: 1;
+    max-width: 58rem;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  h2 {
+    font-size: clamp(1.6rem, 1.2rem + 1.4vw, 2.2rem);
+    font-stretch: 118%;
+    font-weight: 720;
+    letter-spacing: -0.015em;
+    line-height: 1.1;
+  }
+
+  .hint {
+    max-width: 46ch;
+    margin: 0.6rem auto 0;
+  }
+
+  .skills {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.55rem 0.6rem;
+    margin-top: 1.6rem;
+  }
+
+  .skill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem 0.8rem 0.45rem 0.6rem;
+    font: inherit;
+    font-size: 0.95rem;
+    font-weight: 560;
+    color: var(--on);
+    background: var(--deeper);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    cursor: pointer;
+    transition:
+      border-color 0.2s ease,
+      background 0.2s ease;
+  }
+
+  .skill:hover {
+    border-color: rgb(244 247 251 / 0.6);
+  }
+
+  .node {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 2px solid rgb(244 247 251 / 0.7);
+  }
+
+  .count {
+    font-size: 0.82rem;
+    font-weight: 500;
+  }
+
+  .skill[aria-pressed="true"] {
+    background: var(--saffron);
+    border-color: var(--saffron);
+    color: var(--prussian-deep);
+  }
+
+  .skill[aria-pressed="true"] .node {
+    border-color: var(--prussian-deep);
+    background: var(--prussian-deep);
+  }
+
+  .skill[aria-pressed="true"] .count {
+    color: var(--prussian-deep);
+  }
+
+  /* What the last message found; above the buttons so the wires below them stay clear. */
+  .result {
+    min-height: 4.6rem;
+    margin-top: 1rem;
+  }
+
+  .status {
+    min-height: 1.6em;
+    font-weight: 560;
+  }
+
+  /* On a phone the result wraps to three lines; reserve them so the page doesn't jump. */
+  @media (max-width: 40rem) {
+    .result {
+      min-height: 7.5rem;
+    }
+  }
+
+  .clear {
+    margin-top: 0.2rem;
+    padding: 0.35rem 0.8rem;
+    font: inherit;
+    font-size: 0.92rem;
+    color: var(--on);
+    background: transparent;
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    cursor: pointer;
+  }
+
+  .clear:hover {
+    border-color: var(--saffron);
+    color: var(--saffron);
+  }
+</style>
