@@ -109,6 +109,20 @@ projects:
       Drawing of a block chain with a short orphaned fork, and the confirmations a transaction
       gains as blocks are added after it.
 
+  - name: leash
+    url: https://github.com/amirradjou/leash
+    description: >-
+      A smart-account wallet for LLM agents. The agent holds a session key, and an on-chain policy,
+      not the prompt, decides what it can spend; a prompt-injection suite measures the difference.
+    fact: >-
+      $0 lost in 110 attack runs. Without the leash, the same agents lost $15,333 in 27 of 110.
+    tags: [Solidity, Go, Foundry]
+    print: leash
+    print_alt: >-
+      Diagram: the agent's session key signs an operation, and the account contract checks an
+      allowlist, a spend cap, a per-counterparty limit and a passkey co-sign before it reaches the
+      chain.
+
   - name: pennywatch
     url: https://github.com/amirradjou/pennywatch
     live: https://amirradjou.github.io/pennywatch/

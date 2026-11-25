@@ -93,15 +93,22 @@ async function luminance(spec) {
     return sharp(svg).resize(W, H).flatten({ background: "#000" }).greyscale().raw().toBuffer();
   }
   const file = await fetchCached(spec.url);
-  const input = spec.page === undefined ? sharp(file) : sharp(file, { page: spec.page });
+  const options = {};
+  if (spec.page !== undefined) options.page = spec.page;
+  // SVG sources are rasterised at this density (dpi) so their lines stay crisp after resizing.
+  if (spec.density !== undefined) options.density = spec.density;
+  const input = sharp(file, options);
   let img = input.flatten({ background: "#fff" });
   if (spec.extract) img = img.extract(spec.extract);
-  return img
-    .resize(W, H, { fit: "cover" })
-    .greyscale()
-    .normalise({ lower: 2, upper: 98 })
-    .raw()
-    .toBuffer();
+  return (
+    img
+      // "contain" pads a wide diagram with the page colour instead of cropping it.
+      .resize(W, H, { fit: spec.fit ?? "cover", background: "#fff" })
+      .greyscale()
+      .normalise({ lower: 2, upper: 98 })
+      .raw()
+      .toBuffer()
+  );
 }
 
 async function makePrint(spec) {

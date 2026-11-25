@@ -10,6 +10,13 @@
       "diagram": "diagrams/cnsim.svg"
     },
     {
+      "id": "leash",
+      "url": "https://raw.githubusercontent.com/amirradjou/leash/main/docs/architecture.svg",
+      "invert": true,
+      "density": 220,
+      "fit": "contain"
+    },
+    {
       "id": "pennywatch",
       "url": "https://raw.githubusercontent.com/amirradjou/pennywatch/main/docs/history.png",
       "extract": {
