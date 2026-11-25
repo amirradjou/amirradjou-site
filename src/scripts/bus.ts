@@ -284,8 +284,12 @@ for (const video of document.querySelectorAll<HTMLVideoElement>("video[data-star
   video.controls = false;
   button.hidden = false;
   let primed = false;
+  // Whether someone wants it playing right now. The first play waits for the clip's metadata, and
+  // the pointer may have left by then: only start if it is still wanted.
+  let wanted = false;
 
   const play = () => {
+    wanted = true;
     if (!primed) {
       primed = true;
       video.preload = "auto";
@@ -293,7 +297,7 @@ for (const video of document.querySelectorAll<HTMLVideoElement>("video[data-star
         "loadedmetadata",
         () => {
           video.currentTime = Number(video.dataset.start) || 0;
-          void video.play();
+          if (wanted) void video.play();
         },
         { once: true }
       );
@@ -302,7 +306,10 @@ for (const video of document.querySelectorAll<HTMLVideoElement>("video[data-star
       void video.play();
     }
   };
-  const pause = () => video.pause();
+  const pause = () => {
+    wanted = false;
+    video.pause();
+  };
 
   video.addEventListener("play", () => (button.textContent = "Pause"));
   video.addEventListener("pause", () => (button.textContent = "Play the demo"));

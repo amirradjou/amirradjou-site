@@ -133,6 +133,13 @@ const count = (id: string) =>
     font-weight: 560;
   }
 
+  /* On a phone the result wraps to three lines; reserve them so the page doesn't jump. */
+  @media (max-width: 40rem) {
+    .result {
+      min-height: 7.5rem;
+    }
+  }
+
   .clear {
     margin-top: 0.2rem;
     padding: 0.35rem 0.8rem;

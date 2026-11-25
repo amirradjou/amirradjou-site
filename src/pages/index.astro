@@ -316,15 +316,33 @@ const side = (i: number) => (i % 2 === 0 ? "left" : "right");
     }
 
     .station {
-      margin: 1rem 0 0.5rem;
+      margin: 0.7rem 0 0.3rem;
       padding: 0;
       border: 0;
       font-size: 13pt;
     }
 
     .peers {
-      gap: 0.8rem 1.4rem;
-      margin-bottom: 0.5rem;
+      gap: 0.5rem 1.4rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .small {
+      margin-top: 0.6rem;
+    }
+
+    /* On paper each skill group takes one line. */
+    .skills {
+      gap: 0.15rem;
+    }
+
+    .skill-row {
+      display: flex;
+      gap: 0.4rem;
+    }
+
+    .skill-row dt::after {
+      content: ":";
     }
 
     .band {
