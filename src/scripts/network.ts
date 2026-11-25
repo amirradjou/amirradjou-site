@@ -243,7 +243,11 @@ if (plate && canvas && ctx) {
       }
     };
     frame = requestAnimationFrame(tick);
-    window.setTimeout(() => run && report(run), sim.done);
+    // Report this message only if no newer one has replaced it in the meantime.
+    const current = run;
+    window.setTimeout(() => {
+      if (run === current) report(current);
+    }, sim.done);
   }
 
   function draw(now: number) {
@@ -324,7 +328,9 @@ if (plate && canvas && ctx) {
   }
 
   plate.addEventListener("click", (event) => {
-    if ((event.target as Element).closest("a, button, [data-network-avoid]")) return;
+    // Anywhere on the plate sends, text included (on a phone the text covers most of it);
+    // links and the button keep their own job.
+    if ((event.target as Element).closest("a, button")) return;
     const r = plate.getBoundingClientRect();
     send(nearest(event.clientX - r.left, event.clientY - r.top));
   });
