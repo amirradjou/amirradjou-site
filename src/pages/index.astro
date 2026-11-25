@@ -1,17 +1,16 @@
 ---
 import Base from "../layouts/Base.astro";
 import Hero from "../components/Hero.astro";
-import Section from "../components/Section.astro";
-import ExperienceEntry from "../components/ExperienceEntry.astro";
+import Peer from "../components/Peer.astro";
 import ProjectCard from "../components/ProjectCard.astro";
+import ExperienceEntry from "../components/ExperienceEntry.astro";
+import Switchboard from "../components/Switchboard.astro";
 import { loadProfile } from "../lib/profile";
 
 const profile = loadProfile();
 const year = new Date().getFullYear();
 const terminalHost = profile.links.terminal.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "");
-const featured = profile.projects.filter((p) => p.featured);
-const side = profile.projects.filter((p) => !p.featured);
-const edge = (i: number) => ((i % 3) + 1) as 1 | 2 | 3;
+const side = (i: number) => (i % 2 === 0 ? "left" : "right");
 ---
 
 <Base profile={profile}>
@@ -20,59 +19,73 @@ const edge = (i: number) => ((i % 3) + 1) as 1 | 2 | 3;
   </a>
   <Hero profile={profile} />
 
-  <main id="main" class="page">
-    <Section id="about" title="About">
+  <main id="main">
+    <section class="intro page" aria-labelledby="about-heading">
+      <h2 id="about-heading" class="visually-hidden">
+        About
+      </h2>
       <p class="summary">{profile.summary}</p>
-    </Section>
+    </section>
 
-    <Section id="work" title="Open source and research">
-      <div class="grid two">
-        {featured.map((project, i) => (
-          <ProjectCard project={project} edge={edge(i)} size="large" />
+    <Switchboard profile={profile} />
+
+    <div class="bus page" data-bus>
+      <span class="bus-line no-print" aria-hidden="true"></span>
+
+      <h2 class="station" id="work">
+        Projects
+      </h2>
+      <div class="peers">
+        {profile.projects.map((project, i) => (
+          <Peer side={side(i)} kind="project" uses={project.uses} label={project.name}>
+            <ProjectCard project={project} skills={profile.skill_map} />
+          </Peer>
         ))}
       </div>
-    </Section>
 
-    <Section id="side-projects" title="Side projects">
-      <div class="grid three">
-        {side.map((project, i) => (
-          <ProjectCard project={project} edge={edge(i + 2)} size="small" />
+      <h2 class="station" id="experience">
+        Jobs
+      </h2>
+      <div class="peers">
+        {profile.experience.map((job, i) => (
+          <Peer side={side(i)} kind="job" uses={job.uses} label={job.company}>
+            <ExperienceEntry job={job} />
+          </Peer>
         ))}
       </div>
-    </Section>
 
-    <Section id="experience" title="Experience">
-      {profile.experience.map((job) => (
-        <ExperienceEntry job={job} />
-      ))}
-    </Section>
-
-    <Section id="education" title="Education">
-      <ul class="education">
-        {profile.education.map((edu) => (
-          <li>
-            <strong>{edu.degree}</strong>
-            <span class="soft">
-              {edu.school}, {edu.location}
-            </span>
-            <span class="dates soft">
-              {edu.start} to {edu.end}
-            </span>
-          </li>
-        ))}
-      </ul>
-    </Section>
-
-    <Section id="skills" title="Skills">
-      <dl class="skills">
-        {Object.entries(profile.skills).map(([group, items]) => (
-          <div class="skill-row">
-            <dt>{group}</dt>
-            <dd>{items.join(", ")}</dd>
-          </div>
-        ))}
-      </dl>
-    </Section>
+      <h2 class="station" id="education">
+        Education and skills
+      </h2>
+      <div class="peers rest">
+        <section aria-label="Education">
+          <ul class="education">
+            {profile.education.map((edu) => (
+              <li>
+                <strong>{edu.degree}</strong>
+                <span class="soft">
+                  {edu.school}, {edu.location}
+                </span>
+                <span class="dates soft">
+                  {edu.start} to {edu.end}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </section>
+        <section aria-label="All skills">
+          <dl class="skills">
+            {Object.entries(profile.skills).map(([group, items]) => (
+              <div class="skill-row">
+                <dt>{group}</dt>
+                <dd class="soft">{items.join(", ")}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+      </div>
+      <span class="bus-end no-print" aria-hidden="true"></span>
+    </div>
   </main>
 
   <footer class="band">
@@ -98,38 +111,84 @@ const edge = (i: number) => ((i % 3) + 1) as 1 | 2 | 3;
   </footer>
 </Base>
 
+<script>
+  import "../scripts/bus.ts";
+</script>
+
 <style>
+  main {
+    padding-top: clamp(4rem, 9vw, 7rem);
+  }
+
+  .intro {
+    margin-bottom: clamp(4rem, 8vw, 6rem);
+  }
+
   .summary {
-    max-width: var(--measure);
-    font-size: clamp(1.2rem, 1.05rem + 0.5vw, 1.4rem);
-    line-height: 1.5;
-    font-stretch: 96%;
+    max-width: 40ch;
+    margin-inline: auto;
+    text-align: center;
+    font-size: clamp(1.35rem, 1.1rem + 0.9vw, 1.8rem);
+    font-stretch: 94%;
+    font-weight: 450;
+    line-height: 1.4;
   }
 
-  .grid {
+  .bus {
+    position: relative;
+    margin-top: clamp(5rem, 9vw, 7.5rem); /* room for the wires from the skill buttons */
+    padding-top: 3rem;
+  }
+
+  /* The cable: from the switchboard to the end of the page, down the middle of the gap. */
+  .bus-line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 2px;
+    margin-left: -1px;
+    background: var(--line);
+  }
+
+  .bus-end {
+    position: absolute;
+    bottom: -7px;
+    left: 50%;
+    width: 14px;
+    height: 14px;
+    margin-left: -7px;
+    border-radius: 50%;
+    background: var(--saffron);
+  }
+
+  /* A station is a section name sitting on the cable. */
+  .station {
+    position: relative;
+    z-index: 1;
+    width: fit-content;
+    margin: 0 auto 3rem;
+    padding: 0.4rem 1.1rem 0.45rem;
+    font-size: 1.35rem;
+    font-stretch: 72%;
+    font-weight: 640;
+    line-height: 1.1;
+    background: var(--deep);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+  }
+
+  .peers {
     display: grid;
-    gap: clamp(2.5rem, 4vw, 3.5rem) clamp(1.5rem, 3vw, 2.5rem);
-  }
-
-  .grid.two {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--gap);
+    row-gap: 4rem;
+    margin-bottom: clamp(5rem, 10vw, 8rem);
   }
 
-  .grid.three {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  @media (max-width: 75rem) {
-    .grid.three {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-  }
-
-  @media (max-width: 40rem) {
-    .grid.two,
-    .grid.three {
-      grid-template-columns: minmax(0, 1fr);
-    }
+  .rest {
+    row-gap: 2rem;
+    margin-bottom: 4rem;
   }
 
   .education {
@@ -139,8 +198,6 @@ const edge = (i: number) => ((i % 3) + 1) as 1 | 2 | 3;
 
   .education li {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    column-gap: 1.5rem;
   }
 
   .education li + li {
@@ -148,58 +205,63 @@ const edge = (i: number) => ((i % 3) + 1) as 1 | 2 | 3;
   }
 
   .education strong {
-    font-weight: 620;
-    grid-column: 1;
-  }
-
-  .education .soft:not(.dates) {
-    grid-column: 1;
-  }
-
-  .education .dates {
-    grid-column: 2;
-    grid-row: 1;
-    white-space: nowrap;
+    font-weight: 640;
+    font-stretch: 110%;
   }
 
   .skills {
     display: grid;
-    gap: 0.7rem;
-  }
-
-  .skill-row {
-    display: grid;
-    grid-template-columns: 11rem minmax(0, 1fr);
-    gap: 0.25rem 1.25rem;
-    align-items: baseline;
+    gap: 0.55rem;
   }
 
   .skill-row dt {
     font-weight: 620;
-    font-size: 0.98rem;
+    font-size: 0.95rem;
   }
 
   .skill-row dd {
     margin: 0;
-    max-width: var(--measure);
+    font-size: 0.97rem;
   }
 
-  @media (max-width: 34rem) {
-    .skill-row,
-    .education li {
-      grid-template-columns: minmax(0, 1fr);
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  /* One column on narrow screens: the cable moves to the left edge. */
+  @media (max-width: 52rem) {
+    .bus {
+      --hang: 1.6rem;
     }
 
-    .education .dates {
-      grid-column: 1;
-      grid-row: auto;
+    .bus-line,
+    .bus-end {
+      left: calc(var(--gutter) + 0.4rem);
+    }
+
+    .peers {
+      grid-template-columns: minmax(0, 1fr);
+      padding-left: calc(0.4rem + var(--hang));
+    }
+
+    .station {
+      margin-left: 0;
+    }
+
+    .summary {
+      text-align: left;
+      margin-inline: 0;
     }
   }
 
   .band {
-    margin-top: clamp(4rem, 9vw, 7rem);
-    background: var(--prussian);
-    color: var(--on-plate);
+    background: var(--plate);
+    color: var(--on);
   }
 
   .band-inner {
@@ -231,24 +293,42 @@ const edge = (i: number) => ((i % 3) + 1) as 1 | 2 | 3;
   .small {
     margin-top: 2.5rem;
     font-size: 0.9rem;
-    color: var(--on-plate-soft);
+    color: var(--on-soft);
   }
 
   @media print {
+    main {
+      padding-top: 1rem;
+    }
+
+    .intro {
+      margin-bottom: 1rem;
+    }
+
     .summary {
+      max-width: none;
+      text-align: left;
       font-size: 10.5pt;
     }
 
-    .grid.two,
-    .grid.three {
-      grid-template-columns: 1fr 1fr;
-      gap: 0.6rem 1.2rem;
+    .bus {
+      padding-top: 0;
+    }
+
+    .station {
+      margin: 1rem 0 0.5rem;
+      padding: 0;
+      border: 0;
+      font-size: 13pt;
+    }
+
+    .peers {
+      gap: 0.8rem 1.4rem;
+      margin-bottom: 0.5rem;
     }
 
     .band {
-      margin-top: 1rem;
       background: none;
-      color: #000;
     }
 
     .band h2 {
@@ -257,11 +337,6 @@ const edge = (i: number) => ((i % 3) + 1) as 1 | 2 | 3;
 
     .band-inner {
       padding: 0;
-    }
-
-    .small {
-      margin-top: 0.3rem;
-      color: #333;
     }
   }
 </style>

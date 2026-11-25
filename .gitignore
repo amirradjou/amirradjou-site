@@ -23,5 +23,5 @@ dist/
 .claude/
 CLAUDE.md
 
-# downloaded README images for scripts/prints
+# downloaded README images and renders for scripts/media
 .cache/

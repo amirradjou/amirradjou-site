@@ -1,4 +1,4 @@
-// The hero's toy network: peers on a cyanotype plate. Click the plate (or the button) and a message
+// The hero's toy network: peers on the blue first screen. Click the plate (or the button) and a message
 // floods from the nearest peer: each peer forwards it once to every neighbour, and the page reports
 // how many peers it reached, how long that took and how many copies were sent. Times are simulated
 // milliseconds, played back at real speed.
@@ -350,3 +350,6 @@ if (plate && canvas && ctx) {
   // One message on arrival, from the peer nearest the top right, so the idea is visible at once.
   if (!reduceMotion.matches) window.setTimeout(() => send(nearest(width, 0)), 900);
 }
+
+// A module, so its types (Run, Peer) stay private to this file.
+export {};

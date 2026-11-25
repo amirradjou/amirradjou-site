@@ -1,0 +1,58 @@
+{
+  "_comment": "Original pictures from each project's README (or a real capture), not edited for colour. Run `pnpm media` to rebuild public/media/ and src/data/media.json. Video clips come from the README GIFs; `poster` is the GIF frame shown before playing, `frames` keeps only the first N frames.",
+  "media": [
+    {
+      "id": "go-orbitdb",
+      "kind": "html",
+      "html": "go-orbitdb-interop.html",
+      "width": 1280,
+      "height": 800
+    },
+    {
+      "id": "leash",
+      "kind": "svg",
+      "url": "https://raw.githubusercontent.com/amirradjou/leash/main/docs/results.svg"
+    },
+    {
+      "id": "pennywatch",
+      "kind": "still",
+      "url": "https://raw.githubusercontent.com/amirradjou/pennywatch/main/docs/history.png"
+    },
+    {
+      "id": "llm-honeypot",
+      "kind": "video",
+      "url": "https://raw.githubusercontent.com/amirradjou/llm-honeypot/main/docs/demo.gif",
+      "frames": 86,
+      "poster": 80
+    },
+    {
+      "id": "exitcheck",
+      "kind": "still",
+      "url": "https://raw.githubusercontent.com/amirradjou/exitcheck/main/docs/img/verdicts.png",
+      "extract": {
+        "left": 56,
+        "top": 642,
+        "width": 1300,
+        "height": 754
+      }
+    },
+    {
+      "id": "poker-table",
+      "kind": "video",
+      "url": "https://raw.githubusercontent.com/amirradjou/poker-table/main/docs/watch.gif",
+      "poster": 56
+    },
+    {
+      "id": "overhead",
+      "kind": "video",
+      "url": "https://raw.githubusercontent.com/amirradjou/overhead/main/docs/images/demo.gif",
+      "poster": 192
+    },
+    {
+      "id": "chess-coach",
+      "kind": "video",
+      "url": "https://raw.githubusercontent.com/amirradjou/chess-coach/main/docs/screenshots/what-if.gif",
+      "poster": 60
+    }
+  ]
+}

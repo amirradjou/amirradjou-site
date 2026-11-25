@@ -15,8 +15,8 @@
     "check": "astro check",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "prints": "node scripts/prints/make-prints.mjs",
-    "og": "chromium-browser --headless=new --disable-gpu --hide-scrollbars --allow-file-access-from-files --window-size=1200,630 --screenshot=public/og.png scripts/og/og.html"
+    "og": "chromium-browser --headless=new --disable-gpu --hide-scrollbars --allow-file-access-from-files --window-size=1200,630 --screenshot=public/og.png scripts/og/og.html",
+    "media": "node scripts/media/make-media.mjs"
   },
   "dependencies": {
     "@fontsource-variable/archivo": "^5.3.0",

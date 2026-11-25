@@ -3,11 +3,12 @@
 Single-page site for Amirreza Radjou, live at https://amirradjou.com (the terminal version is
 https://terminal.amirradjou.com).
 
-The look is a cyanotype: a Prussian-blue first screen with a small peer-to-peer network you can
-click (a message floods from the nearest peer and the page reports how far it got and how fast), and
-each project shown as a blue-and-white print of its own README picture. Static HTML built with
-[Astro](https://astro.build); the only script is the network (about 5 KB). Printable, dark mode,
-respects reduced motion.
+The page is one network. The first screen is a small peer-to-peer network you can click (a message
+floods from the nearest peer, and the page reports how far it got and how fast). Below it, a cable runs
+down the page and every project and job is a peer wired to it. Pick a skill and a message runs down
+the cable; every peer passes it on, and the ones that used that skill light up. Projects are shown with
+their own pictures and demos, which play on hover or tap. Static HTML built with
+[Astro](https://astro.build), two small scripts and no libraries. Printable; respects reduced motion.
 
 - Content lives in [`content/profile.yaml`](content/profile.yaml). The CV sections must match the CV;
   the projects come from each project's README.
@@ -42,9 +43,10 @@ CI (`.github/workflows/ci.yml`) runs install, Prettier, `astro check` and the bu
    pnpm og
    ```
 
-4. A new project needs a print: add it to `scripts/prints/sources.json` (the README image, which GIF
-   frame, the crop) and run `pnpm prints`. The output in `public/prints/` is committed, so the build
-   never downloads anything.
+4. A new project: add it to `content/profile.yaml` with the skill ids it `uses` (from `skill_map`),
+   then its picture to `scripts/media/sources.json` (the README image or GIF, which frame is the
+   poster, the crop) and run `pnpm media`. The output in `public/media/` and `src/data/media.json` is
+   committed, so the build never downloads anything.
 
 ## Layout
 
@@ -52,9 +54,10 @@ CI (`.github/workflows/ci.yml`) runs install, Prettier, `astro check` and the bu
 - `src/lib/profile.ts` — loads + validates the YAML at build time
 - `src/pages/index.astro` — the one page; `src/components/*` — hero, section, experience entry, project card
 - `src/scripts/network.ts` — the hero's network (canvas, no libraries)
-- `src/styles/global.css` — tokens (light, dark, print) and base styles; Archivo via Fontsource
-- `scripts/prints/` — makes the cyanotype prints and their brushed edges (sharp)
-- `public/` — `cv.pdf`, `favicon.svg`, `og.png`, `prints/`, `robots.txt`
+- `src/scripts/bus.ts` — the skill messages along the cable, and the demo clips
+- `src/styles/global.css` — tokens (screen and print) and base styles; Archivo via Fontsource
+- `scripts/media/` — makes the project pictures and clips from their READMEs (sharp, ffmpeg)
+- `public/` — `cv.pdf`, `favicon.svg`, `og.png`, `media/`, `robots.txt`
 - `netlify.toml` — build command, publish dir, security headers
 
 ## Deploy

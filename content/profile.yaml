@@ -29,6 +29,7 @@ experience:
     location: Toronto, ON
     start: March 2026
     end: Present
+    uses: [go, grpc, openshift, security]
     highlights:
       - Primary developer rebuilding MCBR, a legacy merchant-rules platform, as Go
         microservices and batch jobs on OpenShift — gRPC services, SOAP compatibility
@@ -52,6 +53,7 @@ experience:
     location: Remote
     start: May 2024
     end: March 2025
+    uses: [go, python, grpc, typescript, rust, contracts, docker, p2p]
     highlights:
       - Built Go and Python backend services for a mobile wallet — REST, GraphQL (chat,
         transaction history), and gRPC inter-node communication — released through
@@ -68,6 +70,7 @@ experience:
     location: Toronto, ON
     start: September 2022
     end: May 2025
+    uses: [java, python, p2p, measure]
     highlights:
       - Extended CNSim, an open-source Java network simulator, with Bitcoin and IOTA/Tangle
         protocols for comparative analysis of distributed consensus systems.
@@ -78,7 +81,8 @@ experience:
 projects:
   # The first two are open source and research; the rest are side projects. Every sentence and
   # number below comes from the project's README on GitHub (checked 2026-11-25), not from the CV.
-  # Prints are made by `pnpm prints` (scripts/prints) from each README's own picture.
+  # Pictures are made by `pnpm media` (scripts/media) from each README's own picture, in its
+  # original colours. `uses` names entries of skill_map: checked against each repo's languages.
   - name: go-orbitdb
     kind: Open source, in the OrbitDB organisation
     featured: true
@@ -91,10 +95,8 @@ projects:
     # 247 commits on main.
     fact: I wrote 231 of its 247 commits.
     tags: [Go, libp2p, IPFS]
-    print: go-orbitdb
-    print_alt: >-
-      Drawing of an append-only log. Entries written by a Go peer and a JavaScript peer point back
-      to the entries they saw and merge into one head.
+    uses: [go, p2p]
+    media_alt: "A real run of the interop tests: seven tests replicate databases between Go and a live JavaScript OrbitDB peer, and all pass."
 
   - name: CNSim
     kind: M.Sc. thesis, York University
@@ -104,10 +106,9 @@ projects:
       A discrete-event simulator of blockchain networks. For my thesis I added a way to measure how
       final a Bitcoin transaction is, and node behaviours for attack scenarios.
     tags: [Java, Python]
-    print: cnsim
-    print_alt: >-
-      Drawing of a block chain with a short orphaned fork, and the confirmations a transaction
-      gains as blocks are added after it.
+    uses: [java, python, p2p, docker, measure]
+    # No picture can be shown yet (its README chart predates a seeding fix), so the slot shows the question.
+    panel: How final is a Bitcoin transaction?
 
   - name: leash
     url: https://github.com/amirradjou/leash
@@ -117,11 +118,8 @@ projects:
     fact: >-
       $0 lost in 110 attack runs. Without the leash, the same agents lost $15,333 in 27 of 110.
     tags: [Solidity, Go, Foundry]
-    print: leash
-    print_alt: >-
-      Diagram: the agent's session key signs an operation, and the account contract checks an
-      allowlist, a spend cap, a per-counterparty limit and a passkey co-sign before it reaches the
-      chain.
+    uses: [go, contracts, llm, security, measure]
+    media_alt: "Chart of money lost to prompt-injection attacks: $0 in every leashed run, up to $7,160 in the unguarded ones."
 
   - name: pennywatch
     url: https://github.com/amirradjou/pennywatch
@@ -134,8 +132,8 @@ projects:
       Importing PennyLane grew 74% in 0.43. pennywatch traced it to one line, and removing that
       line gives back 87% of the rise.
     tags: [Python, Valgrind, Docker]
-    print: pennywatch
-    print_alt: Charts of instruction counts across PennyLane releases, one line per backend.
+    uses: [python, docker, measure]
+    media_alt: "Charts of instruction counts across PennyLane releases, one line per backend."
 
   - name: llm-honeypot
     url: https://github.com/amirradjou/llm-honeypot
@@ -146,9 +144,8 @@ projects:
       On bot commands it had never seen, 59 of 65 lines came back as a real Ubuntu 22.04 server
       answers them.
     tags: [Go, SSH]
-    print: llm-honeypot
-    print_alt: >-
-      A recorded attacker session: the bot downloads a binary, fails to run it and adds a cron job.
+    uses: [go, llm, security, docker, measure]
+    media_alt: "The fake Ubuntu shell a bot sees after it logs in, with its first commands."
 
   - name: exitcheck
     url: https://github.com/amirradjou/exitcheck
@@ -157,8 +154,8 @@ projects:
       sell on a fork of the chain.
     fact: Flagged 6 of 6 honeypot tokens in its test set, and 0 of 10 legitimate ones.
     tags: [Go, Foundry, Kafka]
-    print: exitcheck
-    print_alt: "exitcheck's verdict on a token: you can buy, but you cannot sell."
+    uses: [go, contracts, messaging, security, docker, measure]
+    media_alt: "exitcheck's verdict on a token: you can buy, but you cannot sell."
 
   - name: poker-table
     url: https://github.com/amirradjou/poker-table
@@ -169,8 +166,8 @@ projects:
       replays, leagues and hand-by-hand coaching.
     fact: Two model personalities against three bots, over 100 hands, and nobody clears break-even.
     tags: [Python, Ollama]
-    print: poker-table
-    print_alt: Six bots playing a hand of hold'em at the table, with each seat's chance to win.
+    uses: [python, llm, docker, measure]
+    media_alt: "Six bots playing a hand of no-limit hold'em, with each seat's chance to win."
 
   - name: overhead
     url: https://github.com/amirradjou/overhead
@@ -180,8 +177,8 @@ projects:
       The planes you can see from your window, drawn where you would see them through the glass,
       from free flight-tracking feeds.
     tags: [Go, RabbitMQ, Next.js]
-    print: overhead
-    print_alt: A Porter Dash 8 on final for Billy Bishop, drawn over the harbour with its height and speed.
+    uses: [go, typescript, messaging, docker]
+    media_alt: "A Porter Dash 8 on final for Billy Bishop, drawn over Toronto's harbour with its height and speed."
 
   - name: chess-coach
     url: https://github.com/amirradjou/chess-coach
@@ -189,8 +186,26 @@ projects:
       Chess training built from your own games. Stockfish finds the mistakes you keep making, and
       the coach drills you on those exact positions.
     tags: [Python, Stockfish]
-    print: chess-coach
-    print_alt: "The coach showing how an opponent punishes a move, with the engine's line beside the board."
+    uses: [python]
+    media_alt: "The coach showing how an opponent punishes a move, with the engine's line beside the board."
+
+# The skills a visitor can send a message from. `label` is shown on the button. Each project and job
+# lists the ids it used; the page counts them, so the numbers never drift from the data.
+skill_map:
+  - { id: go, label: Go }
+  - { id: python, label: Python }
+  - { id: typescript, label: TypeScript }
+  - { id: java, label: Java }
+  - { id: rust, label: Rust }
+  - { id: p2p, label: Peer-to-peer & consensus }
+  - { id: contracts, label: Smart contracts }
+  - { id: llm, label: LLM agents }
+  - { id: grpc, label: gRPC }
+  - { id: openshift, label: OpenShift & Helm }
+  - { id: messaging, label: Kafka & RabbitMQ }
+  - { id: docker, label: Docker }
+  - { id: security, label: Security }
+  - { id: measure, label: Benchmarks & evals }
 
 education:
   - degree: M.Sc. Computer Science

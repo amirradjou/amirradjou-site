@@ -1,0 +1,57 @@
+{
+  "go-orbitdb": {
+    "src": "/media/go-orbitdb-800.webp",
+    "srcset": "/media/go-orbitdb-800.webp 800w, /media/go-orbitdb-1280.webp 1280w",
+    "width": 1280,
+    "height": 800
+  },
+  "leash": {
+    "src": "/media/leash.svg",
+    "width": 820,
+    "height": 340
+  },
+  "pennywatch": {
+    "src": "/media/pennywatch-800.webp",
+    "srcset": "/media/pennywatch-800.webp 800w, /media/pennywatch-1200.webp 1200w",
+    "width": 1200,
+    "height": 572
+  },
+  "llm-honeypot": {
+    "src": "/media/llm-honeypot-800.webp",
+    "srcset": "/media/llm-honeypot-800.webp 800w, /media/llm-honeypot-1036.webp 1036w",
+    "width": 1036,
+    "height": 668,
+    "video": "/media/llm-honeypot.mp4",
+    "start": 8.21
+  },
+  "exitcheck": {
+    "src": "/media/exitcheck-800.webp",
+    "srcset": "/media/exitcheck-800.webp 800w, /media/exitcheck-1300.webp 1300w",
+    "width": 1300,
+    "height": 754
+  },
+  "poker-table": {
+    "src": "/media/poker-table-760.webp",
+    "srcset": "/media/poker-table-760.webp 760w",
+    "width": 760,
+    "height": 564,
+    "video": "/media/poker-table.mp4",
+    "start": 7
+  },
+  "overhead": {
+    "src": "/media/overhead-800.webp",
+    "srcset": "/media/overhead-800.webp 800w, /media/overhead-960.webp 960w",
+    "width": 960,
+    "height": 540,
+    "video": "/media/overhead.mp4",
+    "start": 5.94
+  },
+  "chess-coach": {
+    "src": "/media/chess-coach-800.webp",
+    "srcset": "/media/chess-coach-800.webp 800w, /media/chess-coach-869.webp 869w",
+    "width": 869,
+    "height": 630,
+    "video": "/media/chess-coach.mp4",
+    "start": 10.15
+  }
+}

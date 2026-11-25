@@ -1,82 +1,154 @@
 ---
-import type { Project } from "../lib/profile";
+import type { Profile, Project } from "../lib/profile";
+import mediaJson from "../data/media.json";
 
 interface Props {
   project: Project;
-  /** Which brushed edge (public/prints/edge-N.svg) masks this print, so neighbours differ. */
-  edge: 1 | 2 | 3;
-  /** Display width in CSS pixels at the largest layout, for `sizes`. */
-  size: "large" | "small";
+  skills: Profile["skill_map"];
 }
 
-const { project, edge, size } = Astro.props;
+type Media = {
+  src: string;
+  srcset?: string;
+  width: number;
+  height: number;
+  video?: string;
+  start?: number;
+};
+
+const { project, skills } = Astro.props;
+const media = (mediaJson as Record<string, Media>)[project.name];
+if (media && !project.media_alt) {
+  throw new Error(`content/profile.yaml: ${project.name} has a picture but no media_alt`);
+}
 const host = (url: string) => url.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "");
-const sizes =
-  size === "large"
-    ? "(min-width: 60rem) 28rem, (min-width: 40rem) 45vw, 92vw"
-    : "(min-width: 60rem) 18rem, (min-width: 40rem) 45vw, 92vw";
+const label = (id: string) => skills.find((s) => s.id === id)?.label ?? id;
+const sizes = "(min-width: 52rem) 34rem, 92vw";
 ---
 
-<article class:list={["project", size]}>
-  <figure class="print-frame no-print">
-    <img
-      class="print"
-      style={`--edge: url("/prints/edge-${edge}.svg")`}
-      src={`/prints/${project.print}-600.webp`}
-      srcset={`/prints/${project.print}-600.webp 600w, /prints/${project.print}-1200.webp 1200w`}
-      sizes={sizes}
-      width="1200"
-      height="800"
-      loading="lazy"
-      decoding="async"
-      alt={project.print_alt}
-    />
-  </figure>
+<div class="project">
+  {media && (
+    <figure class:list={["media", "no-print", { "has-video": media.video }]}>
+      {media.video ? (
+        <>
+          <video
+            data-start={media.start ?? 0}
+            poster={media.src}
+            width={media.width}
+            height={media.height}
+            muted
+            loop
+            playsinline
+            preload="none"
+            controls
+            aria-label={project.media_alt}
+          >
+            <source src={media.video} type="video/mp4" />
+          </video>
+          <button type="button" class="play" data-play hidden>
+            Play the demo
+          </button>
+        </>
+      ) : (
+        <img
+          src={media.src}
+          srcset={media.srcset}
+          sizes={media.srcset ? sizes : undefined}
+          width={media.width}
+          height={media.height}
+          loading="lazy"
+          decoding="async"
+          alt={project.media_alt}
+        />
+      )}
+    </figure>
+  )}
+  {!media && project.panel && (
+    <p class="media panel no-print" aria-hidden="true">
+      {project.panel}
+    </p>
+  )}
   <h3>
     <a href={project.url}>{project.name}</a>
   </h3>
   {project.kind && <p class="kind soft">{project.kind}</p>}
   <p class="desc">{project.description}</p>
   {project.fact && <p class="fact">{project.fact}</p>}
-  <p class="meta soft">{project.tags.join(", ")}</p>
-  {project.live && (
-    <p class="live no-print">
-      <a href={project.live}>{project.live_label ?? "Open the live page"}</a>
-    </p>
-  )}
-  <p class="print-only url soft">{host(project.url)}</p>
-</article>
+  <p class="stack soft">{project.tags.join(", ")}</p>
+  <p class="links no-print">
+    <a href={project.url}>Code</a>
+    {project.live && <a href={project.live}>{project.live_label ?? "Open the live page"}</a>}
+  </p>
+  <p class="print-only soft">{host(project.url)}</p>
+  <p class="visually-hidden">Uses: {project.uses.map(label).join(", ")}.</p>
+</div>
 
 <style>
-  .project {
-    display: flex;
-    flex-direction: column;
+  .media {
+    position: relative;
+    margin-bottom: 1.3rem;
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--deeper);
+    box-shadow:
+      0 0 0 1px rgb(244 247 251 / 0.14),
+      0 28px 60px -24px rgb(0 0 0 / 0.65);
+    transition: box-shadow 0.35s ease;
   }
 
-  .print-frame {
-    margin-bottom: 1.1rem;
+  :global(.peer.lit) .media {
+    box-shadow:
+      0 0 0 2px var(--saffron),
+      0 28px 60px -24px rgb(0 0 0 / 0.65);
   }
 
-  .print {
+  .media img,
+  .media video {
     display: block;
     width: 100%;
     height: auto;
-    aspect-ratio: 3 / 2;
-    background: var(--prussian-deep);
-    -webkit-mask: var(--edge) center / 100% 100% no-repeat;
-    mask: var(--edge) center / 100% 100% no-repeat;
+  }
+
+  /* For a project with no picture: its question, set large, in the picture's place. */
+  .panel {
+    display: grid;
+    align-content: end;
+    aspect-ratio: 16 / 10;
+    padding: clamp(1.25rem, 3vw, 2.25rem);
+    font-size: clamp(1.8rem, 1rem + 2.6vw, 2.9rem);
+    font-stretch: 125%;
+    font-weight: 760;
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    background:
+      radial-gradient(120% 90% at 100% 0%, rgb(245 183 49 / 0.16), transparent 55%), var(--deeper);
+  }
+
+  .play {
+    position: absolute;
+    right: 0.75rem;
+    bottom: 0.75rem;
+    padding: 0.4rem 0.75rem;
+    font: inherit;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--prussian-deep);
+    background: rgb(244 247 251 / 0.92);
+    border: 0;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+
+  .play:hover {
+    background: var(--saffron);
   }
 
   h3 {
-    font-size: 1.3rem;
-    font-stretch: 112%;
-    font-weight: 680;
-    line-height: 1.2;
-    letter-spacing: -0.01em;
-  }
-
-  .large h3 {
-    font-size: 1.6rem;
+    font-size: 1.55rem;
+    font-stretch: 118%;
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.015em;
   }
 
   h3 a {
@@ -89,50 +161,53 @@ const sizes =
   }
 
   .kind {
-    margin-top: 0.15rem;
+    margin-top: 0.2rem;
     font-size: 0.95rem;
   }
 
   .desc {
     margin-top: 0.7rem;
-    font-size: 1rem;
-    line-height: 1.55;
+    max-width: 60ch;
   }
 
   .fact {
-    margin-top: 0.75rem;
-    padding-left: 0.85rem;
+    margin-top: 0.8rem;
+    padding-left: 0.9rem;
     border-left: 3px solid var(--saffron);
-    font-size: 1rem;
-    font-weight: 540;
+    font-weight: 560;
     line-height: 1.45;
   }
 
-  .small .fact,
-  .small .desc {
+  .stack {
+    margin-top: 0.85rem;
+    font-size: 0.92rem;
+  }
+
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.25rem;
+    margin-top: 0.3rem;
+    font-weight: 600;
     font-size: 0.97rem;
   }
 
-  .meta {
-    margin-top: 0.9rem;
-    font-size: 0.9rem;
-  }
-
-  .live {
-    margin-top: 0.2rem;
-    font-size: 0.95rem;
-    font-weight: 550;
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
   }
 
   @media print {
-    .project {
-      break-inside: avoid;
+    h3 {
+      font-size: 11pt;
     }
 
     .desc,
-    .fact,
-    .small .desc,
-    .small .fact {
+    .fact {
       margin-top: 0.2rem;
       font-size: 9.5pt;
     }
@@ -142,13 +217,8 @@ const sizes =
       padding: 0;
     }
 
-    .meta {
+    .stack {
       display: none;
-    }
-
-    h3,
-    .large h3 {
-      font-size: 11pt;
     }
   }
 </style>
