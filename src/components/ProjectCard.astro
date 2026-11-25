@@ -3,130 +3,152 @@ import type { Project } from "../lib/profile";
 
 interface Props {
   project: Project;
+  /** Which brushed edge (public/prints/edge-N.svg) masks this print, so neighbours differ. */
+  edge: 1 | 2 | 3;
+  /** Display width in CSS pixels at the largest layout, for `sizes`. */
+  size: "large" | "small";
 }
 
-const { project } = Astro.props;
-const isRepo = /^https:\/\/github\.com\//.test(project.url);
-const pretty = project.url.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "");
+const { project, edge, size } = Astro.props;
+const host = (url: string) => url.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "");
+const sizes =
+  size === "large"
+    ? "(min-width: 60rem) 28rem, (min-width: 40rem) 45vw, 92vw"
+    : "(min-width: 60rem) 18rem, (min-width: 40rem) 45vw, 92vw";
 ---
 
-<article class="card">
-  <header class="card-head">
-    <h3>
-      <a href={project.url}>{project.name}</a>
-    </h3>
-    <p class="kind muted">{project.kind}</p>
-  </header>
+<article class:list={["project", size]}>
+  <figure class="print-frame no-print">
+    <img
+      class="print"
+      style={`--edge: url("/prints/edge-${edge}.svg")`}
+      src={`/prints/${project.print}-600.webp`}
+      srcset={`/prints/${project.print}-600.webp 600w, /prints/${project.print}-1200.webp 1200w`}
+      sizes={sizes}
+      width="1200"
+      height="800"
+      loading="lazy"
+      decoding="async"
+      alt={project.print_alt}
+    />
+  </figure>
+  <h3>
+    <a href={project.url}>{project.name}</a>
+  </h3>
+  {project.kind && <p class="kind soft">{project.kind}</p>}
   <p class="desc">{project.description}</p>
   {project.fact && <p class="fact">{project.fact}</p>}
-  <footer class="card-foot">
-    <ul class="tags" aria-label="Technologies">
-      {project.tags.map((tag) => (
-        <li>{tag}</li>
-      ))}
-    </ul>
-    <a
-      class="repo no-print"
-      href={project.url}
-
-      aria-label={`${project.name} on ${isRepo ? "GitHub" : "the web"}`}
-    >
-      {isRepo ? "Repository" : "Live demo"} ↗
-    </a>
-    <span class="print-only url muted">{pretty}</span>
-  </footer>
+  <p class="meta soft">{project.tags.join(", ")}</p>
+  {project.live && (
+    <p class="live no-print">
+      <a href={project.live}>{project.live_label ?? "Open the live page"}</a>
+    </p>
+  )}
+  <p class="print-only url soft">{host(project.url)}</p>
 </article>
 
 <style>
-  .card {
+  .project {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
-    padding: 1rem 1.1rem;
-    border: 1px solid var(--border);
-    border-radius: 0.6rem;
-    background: var(--surface);
   }
 
-  .card-head h3 {
-    font-size: 1.02rem;
-    font-weight: 650;
-    line-height: 1.3;
+  .print-frame {
+    margin-bottom: 1.1rem;
   }
 
-  .card-head a {
-    color: var(--text);
+  .print {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 3 / 2;
+    background: var(--prussian-deep);
+    -webkit-mask: var(--edge) center / 100% 100% no-repeat;
+    mask: var(--edge) center / 100% 100% no-repeat;
+  }
+
+  h3 {
+    font-size: 1.3rem;
+    font-stretch: 112%;
+    font-weight: 680;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+
+  .large h3 {
+    font-size: 1.6rem;
+  }
+
+  h3 a {
     text-decoration: none;
   }
 
-  .card-head a:hover {
-    color: var(--accent);
+  h3 a:hover {
     text-decoration: underline;
+    text-decoration-thickness: 2px;
   }
 
   .kind {
-    font-size: 0.85rem;
-    margin-top: 0.1rem;
-  }
-
-  .desc {
+    margin-top: 0.15rem;
     font-size: 0.95rem;
   }
 
+  .desc {
+    margin-top: 0.7rem;
+    font-size: 1rem;
+    line-height: 1.55;
+  }
+
   .fact {
-    font-size: 0.92rem;
-    font-weight: 600;
-    color: var(--accent);
+    margin-top: 0.75rem;
+    padding-left: 0.85rem;
+    border-left: 3px solid var(--saffron);
+    font-size: 1rem;
+    font-weight: 540;
+    line-height: 1.45;
   }
 
-  .card-foot {
-    margin-top: auto;
-    padding-top: 0.25rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    gap: 0.5rem 1rem;
-    flex-wrap: wrap;
+  .small .fact,
+  .small .desc {
+    font-size: 0.97rem;
   }
 
-  .tags {
-    list-style: none;
-    padding: 0;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.35rem;
+  .meta {
+    margin-top: 0.9rem;
+    font-size: 0.9rem;
   }
 
-  .tags li {
-    margin: 0;
-    font-size: 0.78rem;
-    padding: 0.1rem 0.5rem;
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    color: var(--muted);
-    background: var(--bg);
-  }
-
-  .repo {
-    font-size: 0.88rem;
-    white-space: nowrap;
-  }
-
-  .url {
-    font-size: 0.85rem;
+  .live {
+    margin-top: 0.2rem;
+    font-size: 0.95rem;
+    font-weight: 550;
   }
 
   @media print {
-    .card {
+    .project {
       break-inside: avoid;
-      padding: 0;
-      border: none;
-      gap: 0.2rem;
     }
 
-    .tags li {
-      border-color: #bbb;
-      padding: 0 0.4rem;
+    .desc,
+    .fact,
+    .small .desc,
+    .small .fact {
+      margin-top: 0.2rem;
+      font-size: 9.5pt;
+    }
+
+    .fact {
+      border: 0;
+      padding: 0;
+    }
+
+    .meta {
+      display: none;
+    }
+
+    h3,
+    .large h3 {
+      font-size: 11pt;
     }
   }
 </style>

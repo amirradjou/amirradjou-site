@@ -9,111 +9,232 @@ interface Props {
 const { profile } = Astro.props;
 const role = currentRole(profile);
 const pretty = (url: string) => url.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "");
-// Plain-text contact line for the printed page (the buttons are hidden in print).
+// Plain-text contact line for the printed page (the links are hidden in print).
 const contactLine = [
   profile.links.email,
   pretty(profile.links.github),
   pretty(profile.links.linkedin),
   pretty(profile.links.website),
-].join(" · ");
+].join(", ");
 ---
 
-<header class="hero">
-  <h1>{profile.name}</h1>
-  <p class="title">{profile.title}</p>
-  <p class="meta muted">
-    {role && (
-      <span>
-        {role.role} at {role.company}
-      </span>
-    )}
-    {role && <span aria-hidden="true"> · </span>}
-    <span>{profile.location}</span>
-  </p>
+<header class="plate" data-network>
+  <canvas class="net no-print" aria-hidden="true"></canvas>
 
-  <nav class="links no-print" aria-label="Contact and profiles">
-    <a class="btn" href={profile.links.github} rel="me">
-      GitHub
-    </a>
-    <a class="btn" href={profile.links.linkedin} rel="me">
-      LinkedIn
-    </a>
-    <a class="btn" href={`mailto:${profile.links.email}`}>
-      Email
-    </a>
-    <a class="btn btn-primary" href={profile.links.cv} download="Amirreza-Radjou-CV.pdf">
-      Download CV <span class="muted-inline">(PDF, {profile.cv_date})</span>
-    </a>
-  </nav>
+  <div class="plate-inner page">
+    <div class="intro" data-network-avoid>
+      <h1>{profile.name}</h1>
+      <p class="tagline">{profile.tagline}</p>
+      <p class="role">
+        {role ? `${role.role} at ${role.company}, ${profile.location}` : profile.location}
+      </p>
 
-  <p class="print-only contact-line">{contactLine}</p>
+      <nav class="actions no-print" aria-label="CV and profiles">
+        <a class="cv" href={profile.links.cv} download="Amirreza-Radjou-CV.pdf">
+          Download CV <span class="cv-meta">PDF, {profile.cv_date}</span>
+        </a>
+        <a href={profile.links.github} rel="me">
+          GitHub
+        </a>
+        <a href={profile.links.linkedin} rel="me">
+          LinkedIn
+        </a>
+        <a href={`mailto:${profile.links.email}`}>Email</a>
+      </nav>
+      <p class="print-only contact-line">{contactLine}</p>
+    </div>
+
+    <aside class="caption no-print" data-network-avoid>
+      <p>
+        A toy peer-to-peer network. Click the blue to send a message from the nearest peer; each
+        peer passes it on once.
+      </p>
+      <p class="status" data-network-status aria-live="polite"></p>
+      <button type="button" class="send" data-network-send>
+        Send a message
+      </button>
+    </aside>
+  </div>
 </header>
 
+<script>
+  import "../scripts/network.ts";
+</script>
+
 <style>
-  .hero h1 {
-    font-size: clamp(1.9rem, 1.4rem + 2.2vw, 2.5rem);
-    font-weight: 750;
-    letter-spacing: -0.02em;
-    line-height: 1.15;
+  .plate {
+    position: relative;
+    isolation: isolate;
+    min-height: min(100svh, 56rem);
+    display: grid;
+    background:
+      radial-gradient(120% 90% at 85% 10%, transparent 40%, rgb(14 43 90 / 0.55) 100%),
+      var(--prussian);
+    color: var(--on-plate);
+    cursor: crosshair;
+    overflow: hidden;
   }
 
-  .title {
-    margin-top: 0.35rem;
-    font-size: 1.15rem;
+  .net {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+  }
+
+  .plate-inner {
+    width: 100%;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 19rem);
+    align-items: end;
+    gap: 2rem 3rem;
+    padding-block: 6rem clamp(2.5rem, 6vh, 4.5rem);
+  }
+
+  .intro {
+    cursor: auto;
+  }
+
+  h1 {
+    font-size: clamp(3rem, 0.9rem + 7.4vw, 7.25rem);
+    font-stretch: 125%;
+    font-weight: 780;
+    line-height: 0.9;
+    letter-spacing: -0.025em;
+    max-width: 12ch;
+  }
+
+  .tagline {
+    margin-top: clamp(1.25rem, 3vh, 2rem);
+    font-size: clamp(1.3rem, 1.05rem + 0.9vw, 1.75rem);
+    font-stretch: 88%;
     font-weight: 500;
-    color: var(--accent);
+    line-height: 1.25;
   }
 
-  .meta {
-    margin-top: 0.25rem;
-    font-size: 0.98rem;
+  .role {
+    margin-top: 0.35rem;
+    font-size: 1.05rem;
+    color: var(--on-plate-soft);
   }
 
-  .links {
+  .actions {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-top: 1.25rem;
-  }
-
-  .btn {
-    display: inline-flex;
     align-items: center;
-    gap: 0.3rem;
-    padding: 0.5rem 0.9rem;
-    border: 1px solid var(--border);
-    border-radius: 0.5rem;
-    background: var(--surface);
-    color: var(--text);
-    font-weight: 500;
+    gap: 0.75rem 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .actions a {
+    font-weight: 550;
+  }
+
+  .actions .cv {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    padding: 0.7rem 1.15rem 0.75rem;
+    background: var(--saffron);
+    color: var(--prussian-deep);
     text-decoration: none;
-    line-height: 1.2;
+    font-weight: 650;
+    border-radius: 3px;
   }
 
-  .btn:hover {
-    border-color: var(--accent);
-    color: var(--accent);
+  .actions .cv:hover {
+    background: #ffc94f;
   }
 
-  .btn-primary {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: var(--accent-contrast);
+  .cv-meta {
+    font-weight: 450;
+    font-size: 0.85em;
+    font-stretch: 85%;
   }
 
-  .btn-primary:hover {
-    color: var(--accent-contrast);
-    filter: brightness(1.1);
-  }
-
-  .muted-inline {
-    opacity: 0.8;
-    font-weight: 400;
-    font-size: 0.9em;
-  }
-
-  .contact-line {
-    margin-top: 0.4rem;
+  .caption {
+    cursor: auto;
     font-size: 0.92rem;
+    line-height: 1.45;
+    color: var(--on-plate-soft);
+    border-left: 2px solid rgb(244 247 251 / 0.25);
+    padding-left: 1rem;
+  }
+
+  .status {
+    margin-top: 0.6rem;
+    color: var(--on-plate);
+    min-height: 2.9em;
+  }
+
+  .send {
+    display: none;
+    margin-top: 0.75rem;
+    padding: 0.4rem 0.8rem;
+    font: inherit;
+    font-weight: 550;
+    color: var(--on-plate);
+    background: transparent;
+    border: 1px solid rgb(244 247 251 / 0.45);
+    border-radius: 3px;
+    cursor: pointer;
+  }
+
+  .send:hover {
+    border-color: var(--saffron);
+    color: var(--saffron);
+  }
+
+  /* The button and the click hint only make sense once the script has drawn the network. */
+  .plate:not([data-network-ready]) .caption {
+    visibility: hidden;
+  }
+
+  .plate[data-network-ready] .send {
+    display: inline-block;
+  }
+
+  @media (max-width: 52rem) {
+    .plate {
+      min-height: auto;
+    }
+
+    .plate-inner {
+      grid-template-columns: minmax(0, 1fr);
+      padding-top: 12rem;
+    }
+  }
+
+  @media print {
+    .plate {
+      min-height: 0;
+      background: none;
+      color: #000;
+    }
+
+    .plate-inner {
+      padding: 0;
+      display: block;
+    }
+
+    h1 {
+      font-size: 26pt;
+      max-width: none;
+    }
+
+    .tagline {
+      margin-top: 0.3rem;
+      font-size: 12pt;
+    }
+
+    .role {
+      color: #333;
+      font-size: 10.5pt;
+    }
+
+    .contact-line {
+      margin-top: 0.3rem;
+    }
   }
 </style>

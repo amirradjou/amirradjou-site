@@ -14,9 +14,12 @@
     "preview": "astro preview",
     "check": "astro check",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "prints": "node scripts/prints/make-prints.mjs",
+    "og": "chromium-browser --headless=new --disable-gpu --hide-scrollbars --allow-file-access-from-files --window-size=1200,630 --screenshot=public/og.png scripts/og/og.html"
   },
   "dependencies": {
+    "@fontsource-variable/archivo": "^5.3.0",
     "astro": "^7.3.2",
     "yaml": "^2.9.1"
   },
@@ -25,6 +28,7 @@
     "@types/node": "^22.20.3",
     "prettier": "^3.9.7",
     "prettier-plugin-astro": "^1.0.0",
+    "sharp": "^0.35.5",
     "typescript": "^5.9.3"
   }
 }

@@ -1,93 +1,207 @@
 <!doctype html>
+<!-- Open Graph card. Render: pnpm og (headless Chromium screenshot to public/og.png). Generated layout, edit freely. -->
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <style>
+      @font-face {
+        font-family: "Archivo OG";
+        src: url("../../node_modules/@fontsource-variable/archivo/files/archivo-latin-wdth-normal.woff2")
+          format("woff2");
+        font-weight: 100 900;
+        font-stretch: 62% 125%;
+      }
       html,
       body {
         margin: 0;
         width: 1200px;
         height: 630px;
-        background: #ffffff;
-        font-family:
-          ui-sans-serif,
-          system-ui,
-          -apple-system,
-          "Segoe UI",
-          Roboto,
-          "Helvetica Neue",
-          Arial,
-          sans-serif;
-        color: #1b1f24;
+        overflow: hidden;
       }
-      .card {
+      body {
         position: relative;
-        box-sizing: border-box;
-        width: 1200px;
-        height: 630px;
-        padding: 84px 96px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
+        background:
+          radial-gradient(120% 90% at 85% 10%, transparent 40%, rgb(14 43 90 / 0.6) 100%), #17407f;
+        color: #f4f7fb;
+        font-family: "Archivo OG", sans-serif;
       }
-      .bar {
+      .net {
         position: absolute;
-        left: 0;
-        top: 0;
-        bottom: 0;
-        width: 18px;
-        background: #1f3a5f;
+        inset: 0;
       }
-      .name {
-        font-size: 88px;
-        font-weight: 750;
-        letter-spacing: -0.02em;
-        line-height: 1.05;
+      .text {
+        position: absolute;
+        left: 84px;
+        bottom: 70px;
+      }
+      h1 {
         margin: 0;
+        font-size: 104px;
+        font-stretch: 125%;
+        font-weight: 780;
+        line-height: 0.92;
+        letter-spacing: -0.025em;
       }
-      .title {
-        font-size: 36px;
-        font-weight: 500;
-        color: #1f3a5f;
+      p {
         margin: 22px 0 0;
-      }
-      .meta {
-        font-size: 30px;
-        color: #5b6470;
-        margin: 18px 0 0;
+        font-size: 38px;
+        font-stretch: 88%;
+        font-weight: 500;
       }
       .url {
         position: absolute;
-        right: 96px;
-        bottom: 72px;
-        font-size: 30px;
-        color: #5b6470;
-      }
-      .mark {
-        position: absolute;
-        left: 96px;
-        bottom: 64px;
-        width: 56px;
-        height: 56px;
-        border-radius: 12px;
-        background: #1f3a5f;
-        color: #fff;
-        font-weight: 700;
+        right: 64px;
+        bottom: 74px;
         font-size: 26px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        color: #c4d3ea;
+        font-weight: 500;
       }
     </style>
   </head>
   <body>
-    <div class="card">
-      <div class="bar"></div>
-      <h1 class="name">Amirreza Radjou</h1>
-      <p class="title">Software Engineer — Backend &amp; Distributed Systems</p>
-      <p class="meta">Senior Full Stack Developer at CIBC · Toronto, ON</p>
-      <div class="mark">AR</div>
-      <div class="url">amirradjou.com</div>
+    <svg class="net" viewBox="0 0 1200 630" width="1200" height="630">
+      <line x1="1084" y1="295" x2="988" y2="433" stroke="#f5b731" stroke-width="2" />
+      <line x1="1084" y1="295" x2="1076" y2="146" stroke="#f5b731" stroke-width="2" />
+      <line
+        x1="1084"
+        y1="295"
+        x2="1006"
+        y2="229"
+        stroke="rgba(244,247,251,.22)"
+        stroke-width="1.2"
+      />
+      <line x1="137" y1="203" x2="210" y2="39" stroke="rgba(244,247,251,.22)" stroke-width="1.2" />
+      <line x1="137" y1="203" x2="247" y2="168" stroke="#f5b731" stroke-width="2" />
+      <line x1="137" y1="203" x2="64" y2="294" stroke="#f5b731" stroke-width="2" />
+      <line x1="137" y1="203" x2="31" y2="150" stroke="rgba(244,247,251,.22)" stroke-width="1.2" />
+      <line x1="137" y1="203" x2="50" y2="549" stroke="#f5b731" stroke-width="2" />
+      <line x1="137" y1="203" x2="54" y2="393" stroke="#f5b731" stroke-width="2" />
+      <line x1="821" y1="54" x2="632" y2="64" stroke="#f5b731" stroke-width="2" />
+      <line x1="821" y1="54" x2="939" y2="131" stroke="#f5b731" stroke-width="2" />
+      <line x1="821" y1="54" x2="710" y2="197" stroke="#f5b731" stroke-width="2" />
+      <line x1="1150" y1="580" x2="988" y2="433" stroke="#f5b731" stroke-width="2" />
+      <line
+        x1="1150"
+        y1="580"
+        x2="1129"
+        y2="462"
+        stroke="rgba(244,247,251,.22)"
+        stroke-width="1.2"
+      />
+      <line
+        x1="1150"
+        y1="580"
+        x2="1057"
+        y2="527"
+        stroke="rgba(244,247,251,.22)"
+        stroke-width="1.2"
+      />
+      <line x1="210" y1="39" x2="247" y2="168" stroke="rgba(244,247,251,.22)" stroke-width="1.2" />
+      <line x1="210" y1="39" x2="360" y2="70" stroke="#f5b731" stroke-width="2" />
+      <line x1="210" y1="39" x2="31" y2="150" stroke="#f5b731" stroke-width="2" />
+      <line x1="632" y1="64" x2="551" y2="189" stroke="rgba(244,247,251,.22)" stroke-width="1.2" />
+      <line x1="632" y1="64" x2="510" y2="89" stroke="#f5b731" stroke-width="2" />
+      <line x1="632" y1="64" x2="710" y2="197" stroke="rgba(244,247,251,.22)" stroke-width="1.2" />
+      <line x1="247" y1="168" x2="389" y2="161" stroke="#f5b731" stroke-width="2" />
+      <line x1="247" y1="168" x2="360" y2="70" stroke="rgba(244,247,251,.22)" stroke-width="1.2" />
+      <line x1="64" y1="294" x2="31" y2="150" stroke="rgba(244,247,251,.22)" stroke-width="1.2" />
+      <line x1="64" y1="294" x2="50" y2="549" stroke="rgba(244,247,251,.22)" stroke-width="1.2" />
+      <line x1="64" y1="294" x2="54" y2="393" stroke="rgba(244,247,251,.22)" stroke-width="1.2" />
+      <line x1="551" y1="189" x2="510" y2="89" stroke="rgba(244,247,251,.22)" stroke-width="1.2" />
+      <line x1="551" y1="189" x2="710" y2="197" stroke="#f5b731" stroke-width="2" />
+      <line x1="988" y1="433" x2="1129" y2="462" stroke="#f5b731" stroke-width="2" />
+      <line x1="988" y1="433" x2="873" y2="566" stroke="#f5b731" stroke-width="2" />
+      <line x1="988" y1="433" x2="870" y2="431" stroke="rgba(244,247,251,.22)" stroke-width="1.2" />
+      <line x1="988" y1="433" x2="1057" y2="527" stroke="#f5b731" stroke-width="2" />
+      <line x1="389" y1="161" x2="360" y2="70" stroke="rgba(244,247,251,.22)" stroke-width="1.2" />
+      <line x1="389" y1="161" x2="510" y2="89" stroke="#f5b731" stroke-width="2" />
+      <line x1="360" y1="70" x2="510" y2="89" stroke="#f5b731" stroke-width="2" />
+      <line x1="904" y1="258" x2="939" y2="131" stroke="#f5b731" stroke-width="2" />
+      <line x1="904" y1="258" x2="870" y2="431" stroke="#f5b731" stroke-width="2" />
+      <line
+        x1="904"
+        y1="258"
+        x2="1006"
+        y2="229"
+        stroke="rgba(244,247,251,.22)"
+        stroke-width="1.2"
+      />
+      <line
+        x1="1129"
+        y1="462"
+        x2="1057"
+        y2="527"
+        stroke="rgba(244,247,251,.22)"
+        stroke-width="1.2"
+      />
+      <line
+        x1="939"
+        y1="131"
+        x2="1076"
+        y2="146"
+        stroke="rgba(244,247,251,.22)"
+        stroke-width="1.2"
+      />
+      <line x1="939" y1="131" x2="1025" y2="54" stroke="#f5b731" stroke-width="2" />
+      <line
+        x1="939"
+        y1="131"
+        x2="1006"
+        y2="229"
+        stroke="rgba(244,247,251,.22)"
+        stroke-width="1.2"
+      />
+      <line x1="873" y1="566" x2="870" y2="431" stroke="rgba(244,247,251,.22)" stroke-width="1.2" />
+      <line
+        x1="873"
+        y1="566"
+        x2="1057"
+        y2="527"
+        stroke="rgba(244,247,251,.22)"
+        stroke-width="1.2"
+      />
+      <line x1="1076" y1="146" x2="1025" y2="54" stroke="#f5b731" stroke-width="2" />
+      <line
+        x1="1076"
+        y1="146"
+        x2="1006"
+        y2="229"
+        stroke="rgba(244,247,251,.22)"
+        stroke-width="1.2"
+      />
+      <line x1="50" y1="549" x2="54" y2="393" stroke="rgba(244,247,251,.22)" stroke-width="1.2" />
+      <line x1="1025" y1="54" x2="1006" y2="229" stroke="#f5b731" stroke-width="2" />
+      <circle cx="1084" cy="295" r="3.6" fill="#f5b731" />
+      <circle cx="137" cy="203" r="3.6" fill="#f5b731" />
+      <circle cx="821" cy="54" r="3.6" fill="#f5b731" />
+      <circle cx="1150" cy="580" r="3.6" fill="#f5b731" />
+      <circle cx="210" cy="39" r="3.6" fill="#f5b731" />
+      <circle cx="632" cy="64" r="3.6" fill="#f5b731" />
+      <circle cx="247" cy="168" r="3.6" fill="#f5b731" />
+      <circle cx="64" cy="294" r="3.6" fill="#f5b731" />
+      <circle cx="551" cy="189" r="3.6" fill="#f5b731" />
+      <circle cx="988" cy="433" r="3.6" fill="#f5b731" />
+      <circle cx="389" cy="161" r="3.6" fill="#f5b731" />
+      <circle cx="360" cy="70" r="3.6" fill="#f5b731" />
+      <circle cx="904" cy="258" r="3.6" fill="#f5b731" />
+      <circle cx="31" cy="150" r="3.6" fill="#f5b731" />
+      <circle cx="1129" cy="462" r="3.6" fill="#f5b731" />
+      <circle cx="939" cy="131" r="3.6" fill="#f5b731" />
+      <circle cx="873" cy="566" r="3.6" fill="#f5b731" />
+      <circle cx="510" cy="89" r="3.6" fill="#f5b731" />
+      <circle cx="710" cy="197" r="3.6" fill="#f5b731" />
+      <circle cx="1076" cy="146" r="3.6" fill="#f5b731" />
+      <circle cx="50" cy="549" r="3.6" fill="#f5b731" />
+      <circle cx="54" cy="393" r="3.6" fill="#f5b731" />
+      <circle cx="870" cy="431" r="3.6" fill="#f5b731" />
+      <circle cx="1057" cy="527" r="3.6" fill="#f5b731" />
+      <circle cx="1025" cy="54" r="6" fill="#f5b731" />
+      <circle cx="1006" cy="229" r="3.6" fill="#f5b731" />
+    </svg>
+    <div class="text">
+      <h1>Amirreza<br />Radjou</h1>
+      <p>Distributed systems, built and measured.</p>
     </div>
+    <div class="url">amirradjou.com</div>
   </body>
 </html>

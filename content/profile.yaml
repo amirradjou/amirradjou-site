@@ -3,7 +3,8 @@
 # Dates are written as they appear on the CV; ordering is reverse-chronological.
 
 name: Amirreza Radjou
-title: Software Engineer — Backend & Distributed Systems
+title: Software Engineer, Backend & Distributed Systems
+tagline: Distributed systems, built and measured.
 location: Toronto, ON
 cv_date: September 2026
 
@@ -75,45 +76,107 @@ experience:
         post-processing, and a visualization GUI.
 
 projects:
+  # The first two are open source and research; the rest are side projects. Every sentence and
+  # number below comes from the project's README on GitHub (checked 2026-11-25), not from the CV.
+  # Prints are made by `pnpm prints` (scripts/prints) from each README's own picture.
   - name: go-orbitdb
-    kind: Open source
+    kind: Open source, in the OrbitDB organisation
+    featured: true
     url: https://github.com/orbitdb/go-orbitdb
     description: >-
-      Go implementation of OrbitDB (peer-to-peer database on IPFS) with key-value,
-      event-log, and document stores, replication for eventual consistency, and
-      cryptographic access control.
-    # Verified 2026-09-17 via the GitHub API: 194 of the 201 commits on orbitdb/go-orbitdb
-    # are authored by amirradjou (Nov–Dec 2024).
-    fact: Authored 194 of the 201 commits on orbitdb/go-orbitdb.
-    tags: [Go, IPFS, Peer-to-peer]
+      A Go port of OrbitDB, the peer-to-peer database on IPFS. It is byte-for-byte compatible
+      with the JavaScript version, so Go and JavaScript peers open and replicate the same
+      databases, and every push is checked against a live JavaScript node.
+    # 2026-11-25: `gh api repos/orbitdb/go-orbitdb/commits?author=amirradjou` counts 231 of the
+    # 247 commits on main.
+    fact: I wrote 231 of its 247 commits.
+    tags: [Go, libp2p, IPFS]
+    print: go-orbitdb
+    print_alt: >-
+      Drawing of an append-only log. Entries written by a Go peer and a JavaScript peer point back
+      to the entries they saw and merge into one head.
 
   - name: CNSim
-    kind: M.Sc. thesis · York University
-    url: https://github.com/cmg-york/cnsim
+    kind: M.Sc. thesis, York University
+    featured: true
+    url: https://github.com/amirradjou/cnsim
     description: >-
-      Extended CNSim, an open-source Java network simulator, with Bitcoin and IOTA/Tangle
-      protocols for comparative analysis of distributed consensus systems; introduced a
-      Transaction Finality metric and pluggable node-behaviour strategies to benchmark
-      protocols across settings and attack scenarios.
-    tags: [Java, JUnit, Python]
+      A discrete-event simulator of blockchain networks. For my thesis I added a way to measure how
+      final a Bitcoin transaction is, and node behaviours for attack scenarios.
+    tags: [Java, Python]
+    print: cnsim
+    print_alt: >-
+      Drawing of a block chain with a short orphaned fork, and the confirmations a transaction
+      gains as blocks are added after it.
 
-  - name: CO₂ Emissions in Bitcoin Mining
-    kind: Academic · Sep 2023 – Apr 2024
-    url: https://andreapodhorsky.com/btcCO2emissions/
+  - name: pennywatch
+    url: https://github.com/amirradjou/pennywatch
+    live: https://amirradjou.github.io/pennywatch/
+    live_label: See the history
     description: >-
-      Full-stack app (React/TypeScript, Django/Flask, PostgreSQL) visualizing Bitcoin-mining
-      CO₂ emissions as an interactive, time-ranged geospatial heatmap. Optimized in-browser
-      rendering of large datasets via chunked delivery and precomputed cumulative aggregates;
-      automated a daily multi-source ETL pipeline feeding a REST API.
-    tags: [React, TypeScript, Django, PostgreSQL]
+      An independent performance history of PennyLane, Lightning and Catalyst. It runs the same
+      circuits on every build and traces each change to the pull request behind it.
+    fact: >-
+      Importing PennyLane grew 74% in 0.43. pennywatch traced it to one line, and removing that
+      line gives back 87% of the rise.
+    tags: [Python, Valgrind, Docker]
+    print: pennywatch
+    print_alt: Charts of instruction counts across PennyLane releases, one line per backend.
 
-  - name: task-manager
-    kind: Side project
-    url: https://github.com/amirradjou/task-manager
+  - name: llm-honeypot
+    url: https://github.com/amirradjou/llm-honeypot
     description: >-
-      Django task manager with a web UI and a token-authenticated REST API: CRUD, search and
-      filtering, pagination, and per-user task isolation.
-    tags: [Python, Django, REST]
+      An SSH honeypot that lets any bot log in, answers with a convincing fake Ubuntu shell, and
+      records everything it tries without running it.
+    fact: >-
+      On bot commands it had never seen, 59 of 65 lines came back as a real Ubuntu 22.04 server
+      answers them.
+    tags: [Go, SSH]
+    print: llm-honeypot
+    print_alt: >-
+      A recorded attacker session: the bot downloads a binary, fails to run it and adds a cron job.
+
+  - name: exitcheck
+    url: https://github.com/amirradjou/exitcheck
+    description: >-
+      Checks Ethereum and Base tokens for scams by reading the contract and simulating a buy and a
+      sell on a fork of the chain.
+    fact: Flagged 6 of 6 honeypot tokens in its test set, and 0 of 10 legitimate ones.
+    tags: [Go, Foundry, Kafka]
+    print: exitcheck
+    print_alt: "exitcheck's verdict on a token: you can buy, but you cannot sell."
+
+  - name: poker-table
+    url: https://github.com/amirradjou/poker-table
+    live: https://amirradjou.github.io/poker-table/
+    live_label: Try the demo
+    description: >-
+      A no-limit hold'em table where language models, scripted bots and you play each other, with
+      replays, leagues and hand-by-hand coaching.
+    fact: Two model personalities against three bots, over 100 hands, and nobody clears break-even.
+    tags: [Python, Ollama]
+    print: poker-table
+    print_alt: Six bots playing a hand of hold'em at the table, with each seat's chance to win.
+
+  - name: overhead
+    url: https://github.com/amirradjou/overhead
+    live: https://overhead-window.netlify.app
+    live_label: See it live
+    description: >-
+      The planes you can see from your window, drawn where you would see them through the glass,
+      from free flight-tracking feeds.
+    tags: [Go, RabbitMQ, Next.js]
+    print: overhead
+    print_alt: A Porter Dash 8 on final for Billy Bishop, drawn over the harbour with its height and speed.
+
+  - name: chess-coach
+    url: https://github.com/amirradjou/chess-coach
+    description: >-
+      Chess training built from your own games. Stockfish finds the mistakes you keep making, and
+      the coach drills you on those exact positions.
+    tags: [Python, Stockfish]
+    print: chess-coach
+    print_alt: "The coach showing how an opponent punishes a move, with the engine's line beside the board."
 
 education:
   - degree: M.Sc. Computer Science

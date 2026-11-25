@@ -35,11 +35,21 @@ const ExperienceSchema = z
 const ProjectSchema = z
   .object({
     name: nonEmpty,
-    kind: nonEmpty,
+    /** Where the project lives; side projects leave it out (their section already says so). */
+    kind: nonEmpty.optional(),
     url: z.url(),
     description: nonEmpty,
     fact: nonEmpty.optional(),
     tags: z.array(nonEmpty).min(1),
+    /** Shown larger, before the side projects. */
+    featured: z.boolean().optional(),
+    /** A live page or demo, when there is one. */
+    live: z.url().optional(),
+    /** What the live link does, for example "Try the demo". */
+    live_label: nonEmpty.optional(),
+    /** File stem in public/prints/ (made by `pnpm prints`), and what the picture shows. */
+    print: z.string().regex(/^[a-z0-9-]+$/),
+    print_alt: nonEmpty,
   })
   .strict();
 
@@ -57,6 +67,7 @@ export const ProfileSchema = z
   .object({
     name: nonEmpty,
     title: nonEmpty,
+    tagline: nonEmpty,
     location: nonEmpty,
     cv_date: nonEmpty,
     links: LinksSchema,
