@@ -49,7 +49,7 @@ const side = (i: number) => (i % 2 === 0 ? "left" : "right");
       <div class="peers">
         {profile.experience.map((job, i) => (
           <Peer side={side(i)} kind="job" uses={job.uses} label={job.company}>
-            <ExperienceEntry job={job} />
+            <ExperienceEntry job={job} skills={profile.skill_map} />
           </Peer>
         ))}
       </div>

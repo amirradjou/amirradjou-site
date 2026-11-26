@@ -75,12 +75,12 @@ const sizes = "(min-width: 52rem) 34rem, 92vw";
   <p class="desc">{project.description}</p>
   {project.fact && <p class="fact">{project.fact}</p>}
   <p class="stack soft">{project.tags.join(", ")}</p>
+  <p class="lights soft">Lights up for {project.uses.map(label).join(", ")}</p>
   <p class="links no-print">
     <a href={project.url}>Code</a>
     {project.live && <a href={project.live}>{project.live_label ?? "Open the live page"}</a>}
   </p>
   <p class="print-only soft">{host(project.url)}</p>
-  <p class="visually-hidden">Uses: {project.uses.map(label).join(", ")}.</p>
 </div>
 
 <style>
@@ -192,13 +192,15 @@ const sizes = "(min-width: 52rem) 34rem, 92vw";
     font-size: 0.97rem;
   }
 
-  .visually-hidden {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
+  /* Which skills this peer answers to; saffron while the pointer or focus is on it. */
+  .lights {
+    margin-top: 0.15rem;
+    font-size: 0.88rem;
+    transition: color 0.25s ease;
+  }
+
+  :global(.peer.traced) .lights {
+    color: var(--saffron);
   }
 
   @media print {
@@ -217,7 +219,8 @@ const sizes = "(min-width: 52rem) 34rem, 92vw";
       padding: 0;
     }
 
-    .stack {
+    .stack,
+    .lights {
       display: none;
     }
   }

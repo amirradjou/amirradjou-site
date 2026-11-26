@@ -1,11 +1,13 @@
 ---
-import type { Experience } from "../lib/profile";
+import type { Experience, Profile } from "../lib/profile";
 
 interface Props {
   job: Experience;
+  skills: Profile["skill_map"];
 }
 
-const { job } = Astro.props;
+const { job, skills } = Astro.props;
+const label = (id: string) => skills.find((s) => s.id === id)?.label ?? id;
 ---
 
 <article class="entry">
@@ -15,6 +17,7 @@ const { job } = Astro.props;
       <p class="org">
         {job.company}, <span class="soft">{job.location}</span>
       </p>
+      <p class="lights soft">Lights up for {job.uses.map(label).join(", ")}</p>
     </div>
     <p class="dates soft">
       <time>{job.start}</time> – <time>{job.end}</time>
@@ -47,6 +50,22 @@ const { job } = Astro.props;
     font-weight: 660;
     line-height: 1.25;
     letter-spacing: -0.01em;
+  }
+
+  .lights {
+    margin-top: 0.15rem;
+    font-size: 0.88rem;
+    transition: color 0.25s ease;
+  }
+
+  :global(.peer.traced) .lights {
+    color: var(--saffron);
+  }
+
+  @media print {
+    .lights {
+      display: none;
+    }
   }
 
   .org {
