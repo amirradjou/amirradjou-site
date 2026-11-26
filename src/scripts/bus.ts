@@ -269,6 +269,39 @@ if (board && bus) {
     if (status) status.textContent = "";
   }
   clear?.addEventListener("click", clearAll);
+  // Reverse lookup: point at (or tab into) a peer and its skills light in the switchboard, with their
+  // wires; near the pointer, the cable glows from the top down to its junction. Separate classes from
+  // a sent message's, so looking around never clears a lit skill.
+  const trace = document.createElement("span");
+  trace.className = "bus-trace no-print";
+  trace.setAttribute("aria-hidden", "true");
+  bus.append(trace);
+  function lookUp(el: HTMLElement) {
+    const uses = (el.dataset.uses ?? "").split(" ");
+    buttons.forEach((b) => b.classList.toggle("related", uses.includes(b.dataset.skill ?? "")));
+    wires
+      .querySelectorAll<SVGPathElement>("path")
+      .forEach((w) => w.classList.toggle("warm", uses.includes(w.dataset.wire ?? "")));
+    const port = el.querySelector(".port")!.getBoundingClientRect();
+    trace.style.height = `${port.top + port.height / 2 - line.getBoundingClientRect().top}px`;
+    trace.classList.add("on");
+    el.classList.add("traced");
+  }
+  function lookAway(el: HTMLElement) {
+    buttons.forEach((b) => b.classList.remove("related"));
+    wires.querySelectorAll(".warm").forEach((w) => w.classList.remove("warm"));
+    trace.classList.remove("on");
+    el.classList.remove("traced");
+  }
+  for (const el of peerEls) {
+    el.addEventListener("mouseenter", () => lookUp(el));
+    el.addEventListener("mouseleave", () => lookAway(el));
+    el.addEventListener("focusin", () => lookUp(el));
+    el.addEventListener("focusout", (event) => {
+      if (!el.contains(event.relatedTarget as Node | null)) lookAway(el);
+    });
+  }
+
   board.hidden = false;
   drawWires();
   void document.fonts.ready.then(drawWires);
